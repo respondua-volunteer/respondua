@@ -66,3 +66,17 @@ netstat -an | grep 0.0.0.0:5432 tcp 0 0 0.0.0.0:5432 0.0.0.0:* LISTEN
 
 ssh -N ubuntu@3.69.216.243 -L 1111:0.0.0.0:5432
 
+
+django-admin --version
+4.2.11
+
+python3 -m venv venv
+source venv/bin/activate  # Linux/macOS
+
+pip install Django==4.2.11
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py collectstatic
+
+
+python manage.py createsuperuser

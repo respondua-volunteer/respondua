@@ -206,3 +206,7 @@ marimo/_static/
 marimo/_lsp/
 __marimo__/
 Gemfile.lock
+
+
+static/ 
+staticfiles/
