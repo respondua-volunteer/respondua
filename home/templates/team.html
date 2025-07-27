@@ -1,0 +1,210 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% translate "Вiдгук" %}</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="Free Website Template" name="keywords">
+        <meta content="Free Website Template" name="description">
+
+        <!-- Favicon -->
+        <link href="img/favicon.ico" rel="icon">
+
+        <!-- CSS Libraries -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+        <link href="{% static 'lib/flaticon/font/flaticon.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet">   <!--Google Font -->
+
+        <!-- Template Stylesheet -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    </head>
+
+    <body>
+        {% include "top_bar.html" %}
+
+        
+        
+        
+        <!-- Page Header Start -->
+        <div class="page-header">
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <h2>{% translate "Член команди" %}</h2>
+                    </div>
+                    <!-- <div class="col-12">
+                        <a href="">Home</a>
+                        <a href="">Team</a>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+        
+        <!-- Team Start -->
+        <div class="team">
+            <div class="container">
+                <div class="section-header text-center">
+                    <p>{% translate "Зустрічайте нашу команду" %}</p>
+                    <h2>{% translate "Чудові люди стоять за нашою благодійною діяльністю" %}</h2>
+                </div>
+                <div class="row">
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="{% static 'img/team-1.webp' %}"alt="Team Image">
+                            </div>
+                            <div class="team-text">
+                                <h2>{% translate "Олександр Мойсеєнко" %}</h2>
+                                <p>Supervisor</p>
+                                <div class="team-social">
+                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                    <a href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="{% static 'img/team-4.webp' %}" alt="Team Image">
+                            </div>
+                            <div class="team-text">
+                                <h2>{% translate "Олександр Сапего" %}</h2>
+                                <p>Project manager</p>
+                                <div class="team-social">
+                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                    <a href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="{% static 'img/lera.webp' %}" alt="Team Image">
+                            </div>
+                            <div class="team-text">
+                                <h2>{% translate "Валерія Грицик" %}</h2>
+                                <p>PR-manager</p>
+                                <div class="team-social">
+                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                    <a href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="{% static 'img/team-3.webp' %}" alt="Team Image">
+                            </div>
+                            <div class="team-text">
+                                <h2>{% translate "Денис Ткачук" %}</h2>
+                                <p>Head of warehouser</p>
+                                <div class="team-social">
+                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                    <a href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="{% static 'img/teem.webp' %}" alt="Team Image">
+                            </div>
+                            <div class="team-text">
+                                <h2>{% translate "Тимофій Красюк" %}</h2>
+                                <p> Manager</p>
+                                <div class="team-social">
+                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                    <a href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="{% static 'img/team-2.webp' %}" alt="Team Image">
+                            </div>
+                            <div class="team-text">
+                                <h2>{% translate "Вiкторiя Мiнчева" %}</h2>
+                                <p>Warehouse manager</p>
+                                <div class="team-social">
+                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                    <a href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-md-6">
+                        <div class="team-item">
+                            <div class="team-img">
+                                <img src="{% static 'img/andr.webp' %}" alt="Team Image">
+                            </div>
+                            <div class="team-text">
+                                <h2>{% translate "Андрiй Шмериго" %}</h2>
+                                <p>Courier & Driver</p>
+                                <div class="team-social">
+                                    <a href=""><i class="fab fa-twitter"></i></a>
+                                    <a href=""><i class="fab fa-facebook-f"></i></a>
+                                    <a href=""><i class="fab fa-linkedin-in"></i></a>
+                                    <a href=""><i class="fab fa-instagram"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Team End -->
+        
+        {% include 'footer.html' %}
+
+        <!-- Back to top button -->
+        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+        
+        <!-- Pre Loader -->
+        <div id="loader" class="show">
+            <div class="loader"></div>
+        </div>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+        <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+        <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+        <script src="{% static 'lib/parallax/parallax.min.js' %}"></script>
+        
+        <!-- Contact Javascript File -->
+        <!-- <script src="mail/jqBootstrapValidation.min.js"></script>
+        <script src="mail/contact.js"></script> -->
+
+        <!-- Template Javascript -->
+        <script src="{% static 'js/main.js' %}"></script>
+
+    </body>
+</html>

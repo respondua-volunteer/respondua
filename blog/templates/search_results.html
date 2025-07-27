@@ -1,0 +1,66 @@
+{% extends 'blog.html' %}
+{% load static %}
+{% load i18n %}
+
+    <!-- <h1>Результаты поиска</h1> -->
+
+    <!-- <p>Вы искали: "{{ query }}"</p> -->
+
+<!-- Blog Start -->
+        {% block content %}
+        <div class="blog">
+            <div class="container">
+                <div class="section-header text-center">
+                    <p>{% translate "Блог" %}</p>
+                    <h2>{% translate "Останні новини та статті безпосередньо з нашого блогу" %}</h2>
+                </div>
+            </div>
+        </div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4 offset-lg-8">
+                    <!-- <div class="col-lg-8 offset-lg-2"> -->
+                        <div class="sidebar">
+                            <div class="sidebar-widget">
+                                <div class="search-widget">
+                                    <form action="{% url 'search_posts' %}">
+                                        <input class="form-control" type="text" name="q" placeholder="Search Keyword">
+                                        <button class="btn"><i class="fa fa-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% if results %}
+            <div class="blog">
+                <div class="container"> 
+                    <div class="row">
+                        {% for post in results %}
+                        <div class="col-lg-4">
+                            <div class="blog-item">
+                                <div class="blog-img">
+                                    <img src="{{post.image.url}}" alt="Image">
+                                </div>
+                                <div class="blog-text">
+                                    <h3><a href="{% url 'post_detail' post.slug  %}">{{ post.title }}</a></h3>
+                                    <p class="text-eclipse">
+                                        {{post.content|slice:":200"| safe }}
+                                    </p>
+                                </div>
+                                <div class="blog-meta">
+                                    <p><i class="fa fa-user"></i><a>{{ post.author }}</a></p>
+                                    <!-- <p><i class="fa fa-comments"></i><a href="">15 Comments</a></p> -->
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            <p class="no-results"> {% translate "Нічого не знайдено" %}</p>
+        {% endif %}
+        {% endblock content %}
+

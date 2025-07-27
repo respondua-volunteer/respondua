@@ -1,0 +1,36 @@
+{% extends 'blog.html' %}   
+{% load static %}
+{% load i18n %}
+<!-- Blog Start -->
+        {% block content %}
+        <div class="blog">
+            <div class="container">
+                <div class="section-header text-center">
+                    <p>{% translate "Наш Блог" %}</p>
+                    <h2>{% translate "Останні новини та статті" %}</h2>
+                </div>
+                <div class="row">
+                    {% for post in post_list %}
+                    <div class="col-lg-4">
+                        <div class="blog-item">
+                            <div class="blog-img">
+                                <img src="{{post.image.url}}" alt="Image">
+                            </div>
+                            <div class="blog-text">
+                                <h3><a href="{% url 'post_detail' post.slug  %}">{{ post.title }}</a></h3>
+                                <p class="text-eclipse">
+                                    {{post.content|slice:":200"| safe }}
+                                </p>
+                            </div>
+                            <div class="blog-meta">
+                                <p><i class="fa fa-user"></i><a>{{ post.author }}</a></p>
+                                <!-- <p><i class="fa fa-comments"></i><a href="">15 Comments</a></p> -->
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endblock content %}
+

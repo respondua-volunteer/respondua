@@ -1,0 +1,145 @@
+version: '3.8'
+
+services:
+  nginx: 
+    restart: unless-stopped
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/development/Dockerfile
+    ports:
+      - 80:80
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - ./docker/nginx/development:/etc/nginx/conf.d
+    depends_on: 
+      - volunteer
+  volunteer:
+    build: .
+    container_name: volunteer
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - REDIS_HOST=redis
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis  
+
+  redis:
+    # image: redis:7.2.0-alpine3.18
+    container_name: redis
+    build: ./redis
+    ports:
+      - '6379:6379'
+    command: sh -c "./init.sh"
+    privileged: true
+    # command: ["redis-server", "--appendonly", "no", "--maxmemory", "500mb", "--maxmemory-policy", "allkeys-lru", "--daemonize", "yes"]
+    hostname: redis    
+    volumes:
+      - redisdata:/data
+      - /proc/sys:/host_proc/sys:ro
+    cap_add:
+      - SYS_ADMIN
+
+  postgres:
+    image: postgres:14
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - prometheus_data:/prometheus
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=30d"
+      - "--storage.tsdb.retention.size=5GB"
+
+  redis-exporter:
+    image: oliver006/redis_exporter
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_GITHUB_ENABLED=true
+      - GF_AUTH_GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GF_AUTH_GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GF_AUTH_GITHUB_SCOPES=user:email,read:org
+      - GF_AUTH_GITHUB_AUTH_URL=https://github.com/login/oauth/authorize
+      - GF_AUTH_GITHUB_TOKEN_URL=https://github.com/login/oauth/access_token
+      - GF_AUTH_GITHUB_API_URL=https://api.github.com/user
+      # - GF_AUTH_GITHUB_ALLOWED_ORGANIZATIONS=respondua
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+
+  # cadvisor:
+  #   container_name: cadvisor
+  #   image: gcr.io/cadvisor/cadvisor:latest
+  #   # network_mode: "host"
+  #   ports:
+  #     - "8080:8080"
+  #   volumes: 
+  #     - "/:/rootfs"
+  #     - "/var/run:/var/run"
+  #     - "/sys:/sys"
+  #     - "/var/lib/docker/:/var/lib/docker"
+  #     - "/dev/disk/:/dev/disk"
+  #   privileged: true
+  #   devices: 
+  #     - "/dev/kmsg"
+
+volumes:
+  postgres_data:
+  redisdata:
+  static_volume:
+  media_volume:
+  grafana_data:
+  prometheus_data:

@@ -1,0 +1,38 @@
+{% load i18n %}
+<!-- Footer Start -->
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-contact">
+                    <h2>{% translate "Наші контакти" %}</h2>
+                    <p><i class="fa fa-map-marker-alt"></i>{% translate 'Градоначальницька  4, Одеса' %}</p>
+                    <!-- <p><i class="fa fa-phone-alt"></i>+012 345 7777</p> -->
+                    <p><i class="fa fa-envelope"></i>charityfound@respondua.org</p>
+                    <div class="footer-social">
+                        <a class="btn btn-custom" href="https://www.facebook.com/profile.php?id=100083715229246"><i class="fab fa-facebook-f"></i></a>
+                        <a class="btn btn-custom" href=""><i class="fab fa-youtube"></i></a>
+                        <a class="btn btn-custom" href="https://www.instagram.com/vidgukua/"><i class="fab fa-instagram"></i></a>
+                        <a class="btn btn-custom" href="https://t.me/charityfound"><i class="fab fa-telegram"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="footer-link">
+                    <h2>{% translate 'Корисні лінки' %}</h2>
+                    <a href="{% url 'home' %}">{% translate 'Хто ми?' %}</a>
+                    <a href="{% url 'blog' %}">{% translate 'Блог' %}</a>
+                    <a href="{% url 'team' %}">{% translate 'Команда' %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container copyright">
+        <div class="row">
+            <div class="col-md-6">
+                <p>&copy; Vidguk, All Right Reserved.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer End -->

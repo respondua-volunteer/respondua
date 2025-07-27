@@ -1,0 +1,50 @@
+{% load i18n %}
+<!-- Top Bar Start -->
+<div class="top-bar d-none d-md-block">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="top-bar-left">
+                    <div class="text">
+                        <i class="fa fa-envelope"></i>
+                        <p>charityfound@respondua.org</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="top-bar-right">
+                    <div class="social">
+                        <!-- <a href=""><i class="fab fa-twitter"></i></a> -->
+                        <a href="https://www.facebook.com/profile.php?id=100083715229246"><i class="fab fa-facebook-f"></i></a>
+                        <!-- <a href=""><i class="fab fa-linkedin-in"></i></a> -->
+                        <a href="https://www.instagram.com/vidgukua/"><i class="fab fa-instagram"></i></a>
+                        <a href="https://t.me/charityfound"><i class="fab fa-telegram"></i></a>
+                        <a href="https://www.youtube.com/@vidguk8657/videos"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Top Bar End -->
+
+<!-- Nav Bar Start -->
+<div class="navbar navbar-expand-lg bg-dark navbar-dark">
+    <div class="container-fluid">
+        <a href="/" class="navbar-brand">{% translate "Вiдгук" %}</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
+            <div class="navbar-nav ml-auto">
+                <a href="{% url 'home' %}" class="nav-item nav-link{% if is_home_page %} disabled{% endif %}">{% translate "Про Нас" %}</a>
+                <a href="{% url 'team' %}" class="nav-item nav-link{% if is_team_page %} disabled{% endif %}">{% translate "Команда" %}</a>
+                <!-- <a href="event.html" class="nav-item nav-link">Events</a> -->
+                <a href="{% url 'blog' %}" class="nav-item nav-link{% if is_blog_page %} disabled{% endif %}">{% translate "Блог" %}</a>
+                <!-- <a href="contact.html" class="nav-item nav-link">Contact</a> -->
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Nav Bar End -->

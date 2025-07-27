@@ -1,0 +1,170 @@
+{% load static %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>{% translate "Cтаття Вiдгукa" %}</title>
+        <meta content="width=device-width, initial-scale=1.0" name="viewport">
+        <meta content="Free Website Template" name="keywords">
+        <meta content="Free Website Template" name="description">
+
+        <!-- Favicon -->
+        <link href="img/favicon.ico" rel="icon">
+
+        <!-- Google Font -->
+        <link href="https://fonts.googleapis.com/css2?family=Balsamiq+Sans&display=swap" rel="stylesheet">         
+        <!-- CSS Libraries -->
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.0/css/all.min.css" rel="stylesheet">
+        <link href="{% static 'lib/flaticon/font/flaticon.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/animate/animate.min.css' %}" rel="stylesheet">
+        <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+        <!-- Template Stylesheet -->
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    </head>
+
+    <body>
+        {% include 'top_bar.html' %}
+        
+        
+        <!-- Page Header Start -->
+        <div class="page-header">
+            <div class="container">
+                <!-- <div class="row">
+                    <div class="col-12">
+                        <h2>Detail Page</h2>
+                    </div>
+                </div> -->
+            </div>
+        </div>
+        <!-- Page Header End -->
+
+
+        <!-- Single Post Start-->
+        <div class="single">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8">
+                        <div class="single-content">
+                            <img src="{{post.image.url}}" />
+                            <h2>{{ object.title }}</h2>
+                            <p>
+                                {{ object.content | safe }}
+                            </p>
+                        </div>
+                        <div class="single-tags">
+                            {% for tag in object.tags.all %}
+                                <a >{{tag}}</a>
+                            {% endfor %}
+                        </div>
+                        <div class="single-bio">
+                            <div class="single-bio-img">
+                                <img src="{{ post.author.image.url }}" />
+                            </div>
+                            <div class="single-bio-text">
+                                <h3>{{ post.author.name }}</h3>
+                                <p>
+                                    {{ post.author.bio }}
+                                </p>
+                            </div>
+                        </div>
+                        {% if post.tags.similar_objects|length > 1 %}
+                            <div class="single-related">
+                                <h2>{% translate "Схожі статті"%} </h2>
+                                <div class="owl-carousel related-slider">
+                                    {% for relatedpost in post.tags.similar_objects|slice:"0:4" %}
+                                    <div class="post-item">
+                                        <div class="post-img">
+                                            <img src="{{ relatedpost.image.url }}" />
+                                        </div>
+                                        <div class="post-text">
+                                            <a href="{% url 'post_detail' relatedpost.slug  %}">{{relatedpost.title}}</a>  
+                                            <div class="post-meta">
+                                                <p>By {{relatedpost.author}} </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="col-lg-4">
+                        <div class="sidebar">
+                            <div class="sidebar-widget">
+                                <div class="search-widget">
+                                    <form action="{% url 'search_posts' %}">
+                                        <input class="form-control" type="text" name="q" placeholder={% translate "Пошук" %}>
+                                        <button class="btn"><i class="fa fa-search"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-widget">
+                                <h2 class="widget-title">{% translate "Останні Публікації"%}</h2>
+                                <div class="recent-post">
+                                    {% for post in recent_posts %}
+                                        <div class="post-item">
+                                            <div class="post-img">
+                                                <img src="{{ post.image.url }}" />
+                                            </div>
+                                            <div class="post-text">
+                                                <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+                                                <div class="post-meta">
+                                                    <p>By {{ post.author }}</p>
+                                                    {% if post.category %}
+                                                    <!-- <p>In <a href="">{{ post.category }}</a></p> -->
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <div class="sidebar-widget">
+                                <div class="image-widget">
+                                    {% for relatedpost_sideimage in post.tags.similar_objects|slice:"1" %}
+                                        <a href="{% url 'post_detail' relatedpost_sideimage.slug  %}"><img src="{{ relatedpost_sideimage.image.url }}" alt="Image"></a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Single Post End-->   
+
+        {% include 'footer.html' %}
+
+        <!-- Back to top button -->
+        <a href="#" class="back-to-top"><i class="fa fa-chevron-up"></i></a>
+        
+        <!-- Pre Loader -->
+        <div id="loader" class="show">
+            <div class="loader"></div>
+        </div>
+
+        <!-- JavaScript Libraries -->
+        <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+        <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+        <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+        <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+        <script src="{% static 'lib/counterup/counterup.min.js' %}"></script>
+        <script src="{% static 'lib/parallax/parallax.min.js' %}"></script>
+        
+        <!-- Contact Javascript File -->
+        <!-- <script src="mail/jqBootstrapValidation.min.js"></script>
+        <script src="mail/contact.js"></script> -->
+
+        <!-- Template Javascript -->
+        <script src="{% static 'js/main.js' %}"></script>
+    </body>
+</html>

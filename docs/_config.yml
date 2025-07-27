@@ -1,0 +1,47 @@
+title: Respondua Documentation
+description: Open-source volunteer platform documentation
+theme: jekyll-rtd-theme
+source: _docs
+
+# baseurl: "/respondua"
+# baseurl: "/respondua" # for https://username.github.io/respondua
+# url: "https://respondua.github.io"
+
+domain: respondua.github.io       # if you want to force HTTPS, specify the domain without the http at the start, e.g. example.com
+url: https://respondua.github.io  # the base hostname and protocol for your site, e.g. http://example.com
+baseurl: /respondua    # place folder name if the site is served in a subfolder
+
+repository: respondua/respondua
+branch: main
+permalink: pretty
+
+markdown: kramdown
+
+rtd:
+  version: v1.0.0
+  logo: "/assets/logo.png"
+  repo_url: "https://github.com/respondua/respondua"
+  edit_on_github: true
+  github_docs_folder: "_docs"
+  navigation:
+    file: navigation.yml
+
+collections:
+  docs:
+    output: true
+    permalink: /:path/
+
+plugins:
+  - jekyll-seo-tag
+  - jekyll-sitemap
+  - jekyll-feed
+
+search_enabled: true
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: docs
+    values:
+      layout: default

@@ -1,0 +1,25 @@
+<!-- index.html -->
+{% extends 'index.html' %}
+{% load static %}
+
+    {% block content %}
+    <div class="row">
+        {% for post in recent_posts %}
+        <div class="col-lg-4">
+            <div class="blog-item">
+                <div class="blog-img">
+                    <img src="{{post.image.url}}" alt="Image">
+                </div>
+                <div class="blog-text">
+                    <h3><a href="{% url 'post_detail' post.slug  %}">{{ post.title }}</a></h3>
+                    <p>
+                        {{post.content|slice:":200"| safe }}
+                    </p>
+                </div>
+                <div class="blog-meta">
+                    <p><i class="fa fa-user"></i>{{ post.author.name }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    {% endblock %}

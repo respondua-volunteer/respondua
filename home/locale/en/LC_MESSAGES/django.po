@@ -1,0 +1,423 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-11-25 20:58+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: home/templates/cookie_modal.html:11
+msgid ""
+"Ми використовуємо файли cookie на цьому веб-сайті для покращення взаємодії з "
+"користувачем. Натискаючи «Я згоден», ви даєте згоду на встановлення файлів "
+"cookie"
+msgstr ""
+"We use cookies on this website to improve user experience. By clicking \"I "
+"agree\", you consent to the cookies being installed"
+
+#: home/templates/cookie_modal.html:12
+msgid ""
+"Для отримання додаткової інформації про те, які дані містяться у файлах "
+"cookie, перегляньте нашу"
+msgstr "For more information on what data is contained in cookies, see our"
+
+#: home/templates/cookie_modal.html:12
+msgid "Політику конфіденційності"
+msgstr "privacy policy"
+
+#: home/templates/footer.html:8
+msgid "Наші контакти"
+msgstr "Contacts"
+
+#: home/templates/footer.html:9
+msgid "Градоначальницька  4, Одеса"
+msgstr "st. Gradonachalnitskaya 4, Odesa"
+
+#: home/templates/footer.html:22
+msgid "Корисні лінки"
+msgstr "Useful links"
+
+#: home/templates/footer.html:23
+msgid "Хто ми?"
+msgstr "Who are we?"
+
+#: home/templates/footer.html:24 home/templates/index.html:585
+#: home/templates/top_bar.html:44
+msgid "Блог"
+msgstr "Blog"
+
+#: home/templates/footer.html:25 home/templates/top_bar.html:42
+msgid "Команда"
+msgstr "Team"
+
+#: home/templates/index.html:8 home/templates/team.html:8
+#: home/templates/top_bar.html:34
+msgid "Вiдгук"
+msgstr "Vidguk"
+
+#: home/templates/index.html:50
+msgid "Будьмо добрими до дітей"
+msgstr "Let's be kind to children "
+
+#: home/templates/index.html:52
+msgid "Ми віримо, що кожен має право на щасливе та безпечне дитинство."
+msgstr "We believe that everyone has the right to a happy and safe childhood"
+
+#: home/templates/index.html:53
+msgid ""
+"Ваша підтримка дозволяє нам створювати можливості для дітей розвиватися, "
+"навчатися та оточувати їх турботою та ласкою"
+msgstr ""
+"Your support allows us to create opportunities for children to develop, "
+"learn and surround them with care and affection"
+
+#: home/templates/index.html:56 home/templates/index.html:73
+#: home/templates/index.html:89 home/templates/index.html:387
+msgid "Допомогти"
+msgstr "Donate"
+
+#: home/templates/index.html:66
+msgid "Долучіться, протягнувши руку допомоги"
+msgstr "Join with a helping hand"
+
+#: home/templates/index.html:68
+msgid ""
+"Звітайтесь до нашої спільноти і станьте частиною нашого благодійного "
+"зусилля, простягаючи руку допомоги."
+msgstr ""
+"Report to our community and become part of our charitable effort extending a "
+"helping hand"
+
+#: home/templates/index.html:69
+msgid "Разом ми можемо зробити більше для тих, хто потребує нашої допомоги."
+msgstr ""
+
+#: home/templates/index.html:70
+msgid "Приєднуйтесь до нас і долучайтеся до добрих справ"
+msgstr "Together we can do more for those who need our help"
+
+#: home/templates/index.html:83
+msgid "Дарувати надiю мільйонам"
+msgstr "To give hope to millions"
+
+#: home/templates/index.html:85
+msgid ""
+"Важливо пам'ятати, що ми можемо змінити світ, починаючи з невеликих дій, і "
+"це може мати величезний вплив на життя мільйонів людей."
+msgstr ""
+"It is important to remember that we can change the world, starting with "
+"small actions, and it can have a huge impact on the lives of millions of "
+"people."
+
+#: home/templates/index.html:86
+msgid ""
+"Нехай цей лозунг надихне нас усіх дарувати надію та робити світ кращим для "
+"інших."
+msgstr ""
+"Let this slogan inspire us all to give hope and make the world a better "
+"place for others."
+
+#: home/templates/index.html:127
+msgid "Трохи про нас"
+msgstr "Abot us"
+
+#: home/templates/index.html:128
+msgid "Що таке Відгук?"
+msgstr "What is Vidguk"
+
+#: home/templates/index.html:133
+msgid "О нас"
+msgstr "Us"
+
+#: home/templates/index.html:136
+msgid "Місія"
+msgstr "Mission"
+
+#: home/templates/index.html:139
+msgid "Наші цінності"
+msgstr "Our values"
+
+#: home/templates/index.html:145
+msgid ""
+"Відгук - це благодійний фонд створенний українцями, який відгукується на "
+"прохання людей."
+msgstr ""
+"Vidguk is a charitable foundation created by Ukrainians that responds to "
+"people's requests."
+
+#: home/templates/index.html:146
+msgid ""
+"Це люди, яких з 24 лютого 2022 року об'єднало однє бажання і один поклик - "
+"допомога ближньому, тому хто у біді."
+msgstr ""
+"These are people who, since February 24, 2022, have been united by one "
+"desire and one call - to help their neighbor, those who are in trouble."
+
+#: home/templates/index.html:151
+msgid "Наша місія бути відкритими до людей, відчувати та чути їх."
+msgstr "Our mission is to be open to people, to feel and hear them."
+
+#: home/templates/index.html:152
+msgid "Бачити тих, хто потребує допомогу."
+msgstr "To see those who need help."
+
+#: home/templates/index.html:155
+msgid "Однією нашою головною цінністю є - взаємовідносини та довіра."
+msgstr "One of our main values is relationships and trust."
+
+#: home/templates/index.html:156
+msgid ""
+"Для нас важлива кожна людина, якій ми допомогаємо і ми хочемо, щоб вона "
+"відчувала надійність поруч з нами."
+msgstr ""
+"Every person we help is important to us and we want them to feel reliable "
+"next to us"
+
+#: home/templates/index.html:157
+msgid ""
+"Довіра в співпраці— без якої неможлива наша діяльність. Щирість та чесність "
+"допомагають творити нам добро."
+msgstr ""
+"Trust in cooperation - without which our activities are impossible. "
+"Sincerity and honesty help do a good "
+
+#: home/templates/index.html:172
+msgid "Що ми робимо?"
+msgstr "What do we do?"
+
+#: home/templates/index.html:173
+msgid "З вами зможемо врятувати більше життів"
+msgstr "With you we can save more lives"
+
+#: home/templates/index.html:182
+msgid "Продуктова допомога"
+msgstr "Product aid"
+
+#: home/templates/index.html:184
+msgid "Надаємо допомогу продуктовими наборами в Одесi та Херсонській обл."
+msgstr "We provide assistance with food packages in Odessa and Kherson region."
+
+#: home/templates/index.html:197
+msgid "Відбудова"
+msgstr "Rebuilding"
+
+#: home/templates/index.html:198
+msgid "Відбудовуємо зруйновані доми у де-окупованих селах"
+msgstr "Rebuilding destroyed houses in de-occupied villages"
+
+#: home/templates/index.html:213
+msgid "Тепло у будинку"
+msgstr "Heat in the house"
+
+#: home/templates/index.html:214
+msgid "Дрова для де-окупованих сіл на зимовий період"
+msgstr "Firewood for de-occupied villages for the winter season"
+
+#: home/templates/index.html:227
+msgid "Літні табори"
+msgstr "Summer camps"
+
+#: home/templates/index.html:228
+msgid "Табори для пiдлiткiв<br> Незабутній час до якого хочеться повернутися"
+msgstr "Summer camps < br > An unforgettable time to which you want to return"
+
+#: home/templates/index.html:239
+msgid "Поїздки до дітей"
+msgstr "Trips to children"
+
+#: home/templates/index.html:240
+msgid "Поїздки до дітей та підлітків у села Херсонскої та Миколаївської обл."
+msgstr ""
+"Trips to children and teenagers in the villages of Kherson and Mykolaiv "
+"regions."
+
+#: home/templates/index.html:250
+msgid "Соціальна пiдтримка"
+msgstr "Social support"
+
+#: home/templates/index.html:251
+msgid "Допомога людям з інвалідністю, багатодітним сім' ям та переселенцям"
+msgstr "Assistance to people with disabilities, large families and  refugees "
+
+#: home/templates/index.html:270
+msgid "Села"
+msgstr "Villages"
+
+#: home/templates/index.html:279
+msgid "Сім'ї"
+msgstr "Families"
+
+#: home/templates/index.html:288
+msgid "Продуктових наборів"
+msgstr "Food packages"
+
+#: home/templates/index.html:297
+msgid "Поїздок"
+msgstr "Trips"
+
+#: home/templates/index.html:310
+msgid "Майбутні події"
+msgstr "Future events"
+
+#: home/templates/index.html:311
+msgid "Будьте готові до наших майбутніх благодійних iвентiв"
+msgstr "Be prepared to our upcoming events"
+
+#: home/templates/index.html:351
+msgid "Допомогти зараз"
+msgstr "Help now"
+
+#: home/templates/index.html:352
+msgid "Населенню України потрібна ваша допомога"
+msgstr "The population of Ukraine needs your help"
+
+#: home/templates/index.html:356
+msgid "Зробити добро і допомогти тим, хто цього потребує, завжди важливо."
+msgstr "Doing good and helping those who need it is always important."
+
+#: home/templates/index.html:357
+msgid ""
+"Ваші донати допомагають нам розширювати нашу діяльність та надавати допомогу "
+"у надзвичайних ситуаціях."
+msgstr ""
+"Your donations help us expand our activities and provide assistance in "
+"emergency situations."
+
+#: home/templates/index.html:358
+msgid ""
+"Вони також дозволяють нам запускати нові проекти та підвищувати свідомість "
+"про важливі питання."
+msgstr ""
+"They also allow us to launch new projects and raise awareness of important "
+"issues."
+
+#: home/templates/index.html:359
+msgid "Приєднавшись до нас, ми зробимо набагато більше"
+msgstr "Together we can do more for those who need our help"
+
+#: home/templates/index.html:368
+msgid "Iм'я"
+msgstr "Name"
+
+#: home/templates/index.html:430
+msgid "Наша команда"
+msgstr "Our Teem"
+
+#: home/templates/index.html:431
+msgid "Люди якi стоять за нашою благодійною діяльністю"
+msgstr "People are behind our charity work"
+
+#: home/templates/index.html:440 home/templates/team.html:65
+msgid "Олександр Мойсеєнко"
+msgstr "Oleksandr Moiseenko"
+
+#: home/templates/index.html:457 home/templates/team.html:82
+msgid "Олександр Сапего"
+msgstr "Oleksandr Sapego"
+
+#: home/templates/index.html:474 home/templates/team.html:99
+msgid "Валерія Грицик"
+msgstr "Valeria Gritsik"
+
+#: home/templates/index.html:491 home/templates/team.html:116
+msgid "Денис Ткачук"
+msgstr "Denis Tkachuk"
+
+#: home/templates/index.html:514
+msgid "Подяки людей"
+msgstr "Grateful from people"
+
+#: home/templates/index.html:515
+msgid "Що люди говорять про нас"
+msgstr "What people say about us"
+
+#: home/templates/index.html:522
+msgid "Катя"
+msgstr "Kate"
+
+#: home/templates/index.html:528
+msgid "Щиро дякую за допомогу, яку ви нам надаєте в цей час"
+msgstr "Thank you very much for the help you give us at this time"
+
+#: home/templates/index.html:536
+msgid "Ольга"
+msgstr "Olga"
+
+#: home/templates/index.html:542
+msgid ""
+"Велика вдячність, що нам здійснюють гуманітарну допомогу, у цей момент вона "
+"дуже нам потрібна"
+msgstr ""
+"Great gratitude that we are being provided with humanitarian assistance, at "
+"this moment we really need it"
+
+#: home/templates/index.html:550
+msgid "Раїса"
+msgstr "Raisa"
+
+#: home/templates/index.html:556
+msgid ""
+"Дякую благодійному фонду « Відгук», що у таку важку хвилину під час війни ви "
+"нам допомагаєте і підтримуєте"
+msgstr ""
+"I thank the charitable foundation \"Vidguk\" that in such a difficult moment "
+"during the war you help us and support us"
+
+#: home/templates/index.html:564
+msgid "Ігор"
+msgstr "Igor"
+
+#: home/templates/index.html:570
+msgid "Отримали допомогу, дуже дякуємо."
+msgstr "Got help, thank you very much."
+
+#: home/templates/index.html:571
+msgid "Я з Херсону.Слава Україні"
+msgstr "I am from Kherson. Glory to Ukraine"
+
+#: home/templates/index.html:586
+msgid "Останні новини та статті"
+msgstr "Latest news and articles"
+
+#: home/templates/team.html:39
+msgid "Член команди"
+msgstr "Team member"
+
+#: home/templates/team.html:55
+msgid "Зустрічайте нашу команду"
+msgstr "Meet our team"
+
+#: home/templates/team.html:56
+msgid "Чудові люди стоять за нашою благодійною діяльністю"
+msgstr "People are behind our charity work"
+
+#: home/templates/team.html:133
+msgid "Тимофій Красюк"
+msgstr "Timothy Krasiuk"
+
+#: home/templates/team.html:150
+msgid "Вiкторiя Мiнчева"
+msgstr "Viktoria Mincheva"
+
+#: home/templates/team.html:167
+msgid "Андрiй Шмериго"
+msgstr "Andrew Shmeriga"
+
+#: home/templates/top_bar.html:41
+msgid "Про Нас"
+msgstr "About us"
+
+#~ msgid "Зв'яжись з нами"
+#~ msgstr "Contact us"

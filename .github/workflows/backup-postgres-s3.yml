@@ -1,0 +1,27 @@
+# name: Backup-postgres-s3
+
+# on:
+#   schedule: 
+#     - cron: '0 0 * * 0'
+#   workflow_dispatch:
+    
+# jobs:
+#   Build:
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - name: Checkout repository
+#         uses: actions/checkout@v4
+#       - name: Set permissions for private key
+#         run: |
+#           mkdir -p ~/.ssh
+#           echo "${{ secrets.AWS_PRIVATE_KEY }}" | tr -d '\r' > ~/.ssh/id_rsa
+#           cat ~/.ssh/id_rsa
+#           chmod 700 ~/.ssh/id_rsa
+#           eval "$(ssh-agent -s)"
+#           ssh-add ~/.ssh/id_rsa
+#           ssh-keyscan -H 'github.com' >> ~/.ssh/known_hosts
+
+#       - name: Run the scripts Backup-postgres-s3
+#         run: |
+#           ssh -o StrictHostKeyChecking=no ubuntu@3.69.216.243 /home/ubuntu/app/./backup-postgres.sh

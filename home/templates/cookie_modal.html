@@ -1,0 +1,60 @@
+{% load i18n %}
+
+<!-- cookie_modal.html -->
+<div id="cookieModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{% translate "Ми цінуємо вашу конфіденційність" %}</h5>
+            </div>
+            <div class="modal-body">
+                <p>{% translate "Ми використовуємо файли cookie на цьому веб-сайті для покращення взаємодії з користувачем. Натискаючи «Я згоден», ви даєте згоду на встановлення файлів cookie" %}</p>
+                <p>{% translate "Для отримання додаткової інформації про те, які дані містяться у файлах cookie, перегляньте нашу" %} <a href="/privacy-policy/" target="_blank">{% translate "Політику конфіденційності" %}</a></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="rejectCookies">{% translate "Я відмовляюся" %}</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="acceptCookies">{% translate "Я згоден" %}</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  $(document).ready(function(){
+    // Cookie consent functions
+    function setCookie(name, value, days) {
+        var expires = "";
+        if (days) {
+            var date = new Date();
+            date.setTime(date.getTime() + (days*24*60*60*1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        var nameEQ = name + "=";
+        var ca = document.cookie.split(';');
+        for(var i=0;i < ca.length;i++) {
+            var c = ca[i];
+            while (c.charAt(0)==' ') c = c.substring(1,c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+        }
+        return null;
+    }
+
+    // Show cookie consent modal if not accepted yet
+    if(getCookie('cookiesAccepted') === null){
+        $('#cookieModal').modal('show');
+    }
+
+    // Handle cookie consent choices
+    $('#acceptCookies').on('click', function(){
+        setCookie('cookiesAccepted', 'true', 365);
+    });
+
+    $('#rejectCookies').on('click', function(){
+        setCookie('cookiesAccepted', 'false', 365);
+    });
+  });
+</script>

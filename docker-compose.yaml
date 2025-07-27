@@ -1,0 +1,164 @@
+version: '3.8'
+services:
+  nginx: 
+    restart: unless-stopped
+    container_name: nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/production/Dockerfile
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+      - ./docker/nginx/production:/etc/nginx/conf.d
+      - ./docker/nginx/certbot/conf:/etc/letsencrypt
+      - ./docker/nginx/certbot/www:/var/www/certbot
+    depends_on: 
+      - volunteer
+  certbot:
+    image: certbot/certbot
+    restart: unless-stopped
+    volumes:
+      - ./docker/nginx/certbot/conf:/etc/letsencrypt
+      - ./docker/nginx/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"    
+  volunteer:
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:2ac3752
+    container_name: volunteer
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      - REDIS_HOST=redis
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis  
+  redis:
+    image: redis:7.2.0-alpine3.18
+    container_name: redis
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning  
+    hostname: redis    
+    volumes:
+      - redisdata:/data
+  postgres:
+    image: postgres:17.5
+    container_name: postgres
+    env_file: .env
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 256M
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
+      - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
+    command: >
+      postgres -c config_file=/etc/postgresql/postgresql.conf
+               -c hba_file=/etc/postgresql/pg_hba.conf
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+    restart: unless-stopped
+    tty: true
+    stdin_open: true
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: node-exporter
+    restart: unless-stopped
+    ports:
+      - "9100:9100"
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - prometheus_data:/prometheus
+      - ./docker/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./docker/prometheus/alert_rules.yml:/etc/prometheus/alert_rules.yml
+    ports:
+      - "9090:9090"
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.retention.time=30d"
+      - "--storage.tsdb.retention.size=5GB"
+
+  redis-exporter:
+    image: oliver006/redis_exporter
+    ports:
+      - "9121:9121"
+    environment:
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_AUTH_GITHUB_ENABLED=true
+      - GF_AUTH_GITHUB_CLIENT_ID=${GITHUB_CLIENT_ID}
+      - GF_AUTH_GITHUB_CLIENT_SECRET=${GITHUB_CLIENT_SECRET}
+      - GF_AUTH_GITHUB_SCOPES=user:email,read:org
+      - GF_AUTH_GITHUB_AUTH_URL=https://github.com/login/oauth/authorize
+      - GF_AUTH_GITHUB_TOKEN_URL=https://github.com/login/oauth/access_token
+      - GF_AUTH_GITHUB_API_URL=https://api.github.com/user
+      # - GF_AUTH_GITHUB_ALLOWED_ORGANIZATIONS=respondua
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+  postgres-exporter:
+    image: quay.io/prometheuscommunity/postgres-exporter
+    container_name: postgres-exporter
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      - DATA_SOURCE_NAME=postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}?sslmode=disable
+    ports:
+      - "9187:9187"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+  redisdata:
+  static_volume:
+  media_volume:
+  grafana_data:
+  prometheus_data:
