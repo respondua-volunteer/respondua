@@ -51,6 +51,12 @@ VIRT env
 python3.11 -m venv venv
 source venv/bin/activate
 
+django-admin --version
+4.2.11
+
+pip install Django==4.2.11
+pip install -r requirements.txt
+
 source venv/Scripts/activate usefull commands for django
 python manage.py runserver
 python manage.py migrate
@@ -58,6 +64,7 @@ python manage.py makemigrations
 python manage.py createsuperuser
 python manage.py collectstatic
 
+python manage.py compilemessages   - get binare(.mo) from .po
 
 python manage.py compilemessages --ignore=env
 

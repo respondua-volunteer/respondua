@@ -37,6 +37,16 @@ msgstr "For more information on what data is contained in cookies, see our"
 msgid "Політику конфіденційності"
 msgstr "privacy policy"
 
+#: home/templates/cookie_modal.html:15
+msgid "Я відмовляюся"
+msgstr "I disagree"
+
+#: home/templates/cookie_modal.html:16
+msgid "Я згоден"
+msgstr "I agree"
+
+
+
 #: home/templates/footer.html:8
 msgid "Наші контакти"
 msgstr "Contacts"
