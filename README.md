@@ -71,12 +71,14 @@ django-admin --version
 4.2.11
 
 python3 -m venv venv
-source venv/bin/activate  # Linux/macOS
+source venv/bin/activate
 
 pip install Django==4.2.11
 pip install -r requirements.txt
 python manage.py migrate
 python manage.py collectstatic
 
+
+python manage.py compilemessages   - get binare(.mo) from .po
 
 python manage.py createsuperuser
