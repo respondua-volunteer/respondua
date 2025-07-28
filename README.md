@@ -48,6 +48,9 @@ scp -o StrictHostKeyChecking=no -r init-letsencrypt.sh ubuntu@IP:/home/ubuntu/ap
 
 VIRT env
 
+python3.11 -m venv venv
+source venv/bin/activate
+
 source venv/Scripts/activate usefull commands for django
 python manage.py runserver
 python manage.py migrate
@@ -65,3 +68,9 @@ python manage.py dumpdata > db.json
 netstat -an | grep 0.0.0.0:5432 tcp 0 0 0.0.0.0:5432 0.0.0.0:* LISTEN
 
 ssh -N ubuntu@3.69.216.243 -L 1111:0.0.0.0:5432
+
+local run
+
+```shell
+DJANGO_SETTINGS_MODULE=mysite.settings.dev python manage.py runserver
+```
