@@ -48,6 +48,15 @@ scp -o StrictHostKeyChecking=no -r init-letsencrypt.sh ubuntu@IP:/home/ubuntu/ap
 
 VIRT env
 
+python3.11 -m venv venv
+source venv/bin/activate
+
+django-admin --version
+4.2.11
+
+pip install Django==4.2.11
+pip install -r requirements.txt
+
 source venv/Scripts/activate usefull commands for django
 python manage.py runserver
 python manage.py migrate
@@ -55,6 +64,7 @@ python manage.py makemigrations
 python manage.py createsuperuser
 python manage.py collectstatic
 
+python manage.py compilemessages   - get binare(.mo) from .po
 
 python manage.py compilemessages --ignore=env
 
@@ -66,19 +76,8 @@ netstat -an | grep 0.0.0.0:5432 tcp 0 0 0.0.0.0:5432 0.0.0.0:* LISTEN
 
 ssh -N ubuntu@3.69.216.243 -L 1111:0.0.0.0:5432
 
+local run
 
-django-admin --version
-4.2.11
-
-python3 -m venv venv
-source venv/bin/activate
-
-pip install Django==4.2.11
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py collectstatic
-
-
-python manage.py compilemessages   - get binare(.mo) from .po
-
-python manage.py createsuperuser
+```shell
+DJANGO_SETTINGS_MODULE=mysite.settings.dev python manage.py runserver
+```
