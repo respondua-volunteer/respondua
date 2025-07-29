@@ -81,3 +81,8 @@ local run
 ```shell
 DJANGO_SETTINGS_MODULE=mysite.settings.dev python manage.py runserver
 ```
+run docker dev
+
+```shell
+docker compose -f docker-compose.dev.yaml up --build -d
+```
