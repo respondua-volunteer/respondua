@@ -56,13 +56,16 @@ jobs:
         run: |
           yq e '.services.volunteer.image = "420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:${{ github.ref_name }}"' -i docker-compose.yaml
 
-      - name: Commit updated docker-compose.yaml
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docker-compose.yaml
-          git commit -m "chore: update docker-compose.yaml with image tag ${{ github.ref_name }}" || echo "No changes to commit"
-          git push origin main
+      - name: Create pull request with updated docker-compose.yaml
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "chore: update docker-compose.yaml with image tag ${{ github.ref_name }}"
+          branch: chore/update-docker-compose-${{ github.ref_name }}
+          title: 'chore: update docker-compose.yaml to ${{ github.ref_name }}'
+          body: |
+            This PR updates the docker-compose.yaml to use the new Docker image tag `${{ github.ref_name }}`.
+
 
       - name: Build and push Docker image
         id: build-and-push
