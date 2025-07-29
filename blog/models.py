@@ -29,6 +29,7 @@ class Post(models.Model):
     status = models.IntegerField(choices=STATUS, default=0)
     image = models.ImageField(upload_to='images/')
     tags = TaggableManager()
+    teaser_text = models.CharField(max_length=200, blank=True, default='')
 
     class Meta:
         ordering = ['-created_on']
