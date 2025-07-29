@@ -19,7 +19,7 @@
                             <div class="blog-text">
                                 <h3><a href="{% url 'post_detail' post.slug  %}">{{ post.title }}</a></h3>
                                 <p class="text-eclipse">
-                                    {{post.content|slice:":200"| safe }}
+                                    {{post.teaser_text}}
                                 </p>
                             </div>
                             <div class="blog-meta">
