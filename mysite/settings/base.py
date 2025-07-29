@@ -108,8 +108,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': [
-            'heading', '|', 'bold', 'italic', 'underline', 'link', '|',
-            'code', 'codeBlock', 'insertImage', 'insertTable', 'horizontalLine', '|',
+            'heading', '|',
+            'bold', 'italic', 'underline', 'link', '|',
+            'code', 'codeBlock', 'sourceEditing', '|', 
+            'insertImage', 'insertTable', 'horizontalLine', '|',
             'bulletedList', 'numberedList', 'blockQuote', '|',
             'undo', 'redo'
         ],
@@ -128,6 +130,7 @@ CKEDITOR_5_CONFIGS = {
         'language': 'en',
     }
 }
+
 
 
 # LiqPay
