@@ -1,0 +1,13 @@
+/* admin_custom.css */
+#header, .module h2 {
+    background-color: #021c36;
+    color: white;
+}
+
+
+/* Переопределяем цвет текста внутри CKEditor 5 */
+.ck-editor__editable_inline,
+.ck-content {
+  color: #000 !important;        
+  background-color: #fff !important; 
+}

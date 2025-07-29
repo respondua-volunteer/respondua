@@ -208,5 +208,7 @@ __marimo__/
 Gemfile.lock
 
 
-static/ 
+
 staticfiles/
+
+media/

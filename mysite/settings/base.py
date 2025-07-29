@@ -6,7 +6,7 @@ from django.utils.encoding import smart_str
 
 django.utils.encoding.smart_text = smart_str
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
@@ -96,8 +96,10 @@ DEBUG_TOOLBAR_PANELS = [
 
 # Media files
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
-STATICFILES_DIRS = [BASE_DIR / 'staticfiles']
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')   
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -106,8 +108,10 @@ MEDIA_ROOT = BASE_DIR / 'media'
 CKEDITOR_5_CONFIGS = {
     'default': {
         'toolbar': [
-            'heading', '|', 'bold', 'italic', 'underline', 'link', '|',
-            'code', 'codeBlock', 'insertImage', 'insertTable', 'horizontalLine', '|',
+            'heading', '|',
+            'bold', 'italic', 'underline', 'link', '|',
+            'code', 'codeBlock', 'sourceEditing', '|', 
+            'insertImage', 'insertTable', 'horizontalLine', '|',
             'bulletedList', 'numberedList', 'blockQuote', '|',
             'undo', 'redo'
         ],
@@ -120,10 +124,7 @@ CKEDITOR_5_CONFIGS = {
         'codeBlock': {
             'languages': [
                 {'language': 'plaintext', 'label': 'Text'},
-                {'language': 'python', 'label': 'Python'},
                 {'language': 'html', 'label': 'HTML'},
-                {'language': 'css', 'label': 'CSS'},
-                {'language': 'javascript', 'label': 'JavaScript'},
             ]
         },
         'language': 'en',
@@ -131,10 +132,11 @@ CKEDITOR_5_CONFIGS = {
 }
 
 
+
 # LiqPay
-LIQPAY_PUBLIC_KEY = config("LIQPAY_PUBLIC_KEY", default="sandbox_i97618994403")
-LIQPAY_PRIVATE_KEY = config("LIQPAY_PRIVATE_KEY", default="sandbox_997Trh...")
-LIQPAY_SANDBOX_MODE = config("LIQPAY_SANDBOX_MODE", default=True, cast=bool)
+LIQPAY_PUBLIC_KEY = config("LIQPAY_PUBLIC_KEY")
+LIQPAY_PRIVATE_KEY = config("LIQPAY_PRIVATE_KEY")
+LIQPAY_SANDBOX_MODE = config("LIQPAY_SANDBOX_MODE")
 
 # i18n / L10n
 LANGUAGE_CODE = 'uk'
