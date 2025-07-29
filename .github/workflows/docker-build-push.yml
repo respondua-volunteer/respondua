@@ -61,12 +61,12 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main
-          commit-message: "chore: update docker-compose.yaml with image tag ${{ github.ref_name }}"
-          branch: "chore/update-docker-compose-${{ github.ref_name }}"
-          title: "chore: update docker-compose.yaml to ${{ github.ref_name }}"
+          commit-message: "release: respondua site v${{ github.ref_name }}"
+          branch: "release/update-docker-compose-${{ github.ref_name }}"
+          title: "release: deploy respondua site v${{ github.ref_name }}"
           body: |
-            This PR updates the docker-compose.yaml to use the new Docker image tag `${{ github.ref_name }}`.
-      
+            This PR updates the docker-compose.yaml to deploy the respondua site using Docker image tag `${{ github.ref_name }}`.
+
       - name: Build and push Docker image
         id: build-and-push
         uses: docker/build-push-action@v4.0.0
