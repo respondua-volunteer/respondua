@@ -210,3 +210,5 @@ Gemfile.lock
 
 
 staticfiles/
+
+media/
