@@ -61,9 +61,9 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           base: main
-          commit-message: "release: respondua site v${{ github.ref_name }}"
+          commit-message: "release: respondua site ${{ github.ref_name }}"
           branch: "release/update-docker-compose-${{ github.ref_name }}"
-          title: "release: deploy respondua site v${{ github.ref_name }}"
+          title: "release: deploy respondua site ${{ github.ref_name }}"
           body: |
             This PR updates the docker-compose.yaml to deploy the respondua site using Docker image tag `${{ github.ref_name }}`.
 
