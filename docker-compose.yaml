@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  nginx: 
+  nginx:
     restart: unless-stopped
     container_name: nginx
     build:
@@ -15,7 +15,7 @@ services:
       - ./docker/nginx/production:/etc/nginx/conf.d
       - ./docker/nginx/certbot/conf:/etc/letsencrypt
       - ./docker/nginx/certbot/www:/var/www/certbot
-    depends_on: 
+    depends_on:
       - volunteer
   certbot:
     image: certbot/certbot
@@ -23,9 +23,9 @@ services:
     volumes:
       - ./docker/nginx/certbot/conf:/etc/letsencrypt
       - ./docker/nginx/certbot/www:/var/www/certbot
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"    
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   volunteer:
-    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:2ac3752
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.0.6
     container_name: volunteer
     restart: unless-stopped
     env_file: .env
@@ -38,14 +38,14 @@ services:
       - "8000:8000"
     depends_on:
       - postgres
-      - redis  
+      - redis
   redis:
     image: redis:7.2.0-alpine3.18
     container_name: redis
     ports:
       - '6379:6379'
-    command: redis-server --save 20 1 --loglevel warning  
-    hostname: redis    
+    command: redis-server --save 20 1 --loglevel warning
+    hostname: redis
     volumes:
       - redisdata:/data
   postgres:
@@ -72,16 +72,18 @@ services:
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
     command: >
       postgres -c config_file=/etc/postgresql/postgresql.conf
+
+
+
                -c hba_file=/etc/postgresql/pg_hba.conf
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U postgres -d postgres" ]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 30s
       timeout: 10s
       retries: 5
     restart: unless-stopped
     tty: true
     stdin_open: true
-
   node-exporter:
     image: prom/node-exporter:latest
     container_name: node-exporter
@@ -96,7 +98,6 @@ services:
       - '--path.procfs=/host/proc'
       - '--path.sysfs=/host/sys'
       - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($|/)'
-
   prometheus:
     image: prom/prometheus:latest
     container_name: prometheus
@@ -110,7 +111,6 @@ services:
       - "--config.file=/etc/prometheus/prometheus.yml"
       - "--storage.tsdb.retention.time=30d"
       - "--storage.tsdb.retention.size=5GB"
-
   redis-exporter:
     image: oliver006/redis_exporter
     ports:
@@ -119,7 +119,6 @@ services:
       - REDIS_ADDR=redis:6379
     depends_on:
       - redis
-
   grafana:
     image: grafana/grafana:latest
     container_name: grafana
@@ -154,7 +153,6 @@ services:
       - "9187:9187"
     depends_on:
       - postgres
-
 volumes:
   postgres_data:
   redisdata:

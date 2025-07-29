@@ -3,9 +3,14 @@ from storages.backends.s3boto3 import S3Boto3Storage
 
 
 class StaticStorage(S3Boto3Storage):
-    location = 'static'
+    location = settings.STATICFILES_LOCATION
+    default_acl = None
+    file_overwrite = True
+    querystring_auth = False
 
 
-class PublicMediaStorage(S3Boto3Storage):
-    location = 'media'
+class MediaStorage(S3Boto3Storage):
+    location = settings.MEDIAFILES_LOCATION
+    default_acl = 'private'
     file_overwrite = False
+    querystring_auth = True

@@ -83,4 +83,9 @@ DJANGO_SETTINGS_MODULE=mysite.settings.dev python manage.py runserver
 ```
 
 
+
 To make "DJANGO_SETTINGS_MODULE=mysite.settings.dev python manage.py runserver" short add to .env file 'DJANGO_SETTINGS_MODULE=mysite.settings.dev' 
+
+```shell
+docker compose -f docker-compose.dev.yaml up --build -d
+
