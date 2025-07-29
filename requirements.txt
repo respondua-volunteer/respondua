@@ -9,7 +9,6 @@ click==8.2.1
 coreapi==2.3.3
 coreschema==0.0.4
 Django==5.2.4
-# django-ckeditor==6.7.3
 django-debug-toolbar==6.0.0
 django-extensions==4.1
 django-jazzmin==3.0.1
