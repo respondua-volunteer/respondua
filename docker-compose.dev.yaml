@@ -8,7 +8,7 @@ services:
     ports:
       - 80:80
     volumes:
-      - static_volume:/app/mysite/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/mysite/media
       - ./docker/nginx/development:/etc/nginx/conf.d
     depends_on: 
@@ -21,7 +21,7 @@ services:
     environment:
       - REDIS_HOST=redis
     volumes:
-      - static_volume:/app/mysite/static
+      - static_volume:/app/staticfiles
       - media_volume:/app/mysite/media
     ports:
       - "8000:8000"

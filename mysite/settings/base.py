@@ -30,11 +30,23 @@ INSTALLED_APPS = [
     'storages',
     'django_ckeditor_5',
     'django_extensions',
-    'rest_framework_swagger',
     'rest_framework',
-    'drf_yasg',
+    'drf_spectacular',
     'debug_toolbar',
 ]
+
+REST_FRAMEWORK = {
+    # YOUR SETTINGS
+    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+}
+
+SPECTACULAR_SETTINGS = {
+    'TITLE': 'Respond API',
+    'DESCRIPTION': 'API documentation for Respond project',
+    'VERSION': '1.0.0',
+    'SERVE_INCLUDE_SCHEMA': False,
+    'SCHEMA_PATH_PREFIX_TRIM': True,
+}
 
 MIDDLEWARE = [
     'django_prometheus.middleware.PrometheusBeforeMiddleware',
