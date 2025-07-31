@@ -1,0 +1,7 @@
+openapi: 3.0.3
+info:
+  title: Respond API
+  version: 1.0.0
+  description: API documentation for Respond project
+paths: {}
+components: {}

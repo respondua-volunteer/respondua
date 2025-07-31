@@ -30,7 +30,6 @@ COPY --from=builder /app/wheels /wheels
 COPY --from=builder /app/requirements.txt .
 
 RUN python -m pip install --upgrade pip && \
-    pip install --upgrade "setuptools>=80.9.0" --no-cache-dir && \
     pip install --no-cache-dir /wheels/* && \
     find /usr/local/lib/python3.10/site-packages -name '*.pyc' -delete && \
     find /usr/local/lib/python3.10/site-packages -name '__pycache__' -type d -exec rm -r {} + && \
@@ -39,8 +38,7 @@ RUN python -m pip install --upgrade pip && \
 
 COPY --chown=appuser:appuser --from=builder /app /app
 
-RUN mkdir -p /app/mysite/static && \
-    chown -R appuser:appgroup /app/mysite/static
+RUN chown -R appuser:appgroup /app
 
 
 COPY /entrypoint.sh /entrypoint.sh
