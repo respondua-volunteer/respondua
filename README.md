@@ -48,16 +48,14 @@ scp -o StrictHostKeyChecking=no -r init-letsencrypt.sh ubuntu@IP:/home/ubuntu/ap
 
 VIRT env
 
-python3.11 -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 
 django-admin --version
-4.2.11
 
-pip install Django==4.2.11
 pip install -r requirements.txt
 
-source venv/Scripts/activate usefull commands for django
+source venv/Scripts/activate 
 python manage.py runserver
 python manage.py migrate
 python manage.py makemigrations

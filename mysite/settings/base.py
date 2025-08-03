@@ -15,6 +15,7 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*").split(",")
 CSRF_TRUSTED_ORIGINS = ['https://*.respondua.org']
 
 INSTALLED_APPS = [
+    'modeltranslation',
     'django_prometheus',
     'parler',
     'django.contrib.admin',
