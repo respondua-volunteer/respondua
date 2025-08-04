@@ -6,6 +6,7 @@
     // Скрываем оригинальный селект
     $select.hide();
 
+    
     // Получаем языки из опций
     var langs = [];
     $select.find("option").each(function() {
