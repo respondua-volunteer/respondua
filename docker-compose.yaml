@@ -25,7 +25,7 @@ services:
       - ./docker/nginx/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   volunteer:
-    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.0.6
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.0.8
     container_name: volunteer
     restart: unless-stopped
     env_file: .env
@@ -72,6 +72,7 @@ services:
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
     command: >
       postgres -c config_file=/etc/postgresql/postgresql.conf
+
 
 
 
