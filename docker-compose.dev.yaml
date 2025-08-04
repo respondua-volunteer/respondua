@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: ./docker/nginx/development/Dockerfile
     ports:
-      - 80:80
+      - 8080:80
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/mysite/media
