@@ -38,8 +38,9 @@ RUN python -m pip install --upgrade pip && \
 
 COPY --chown=appuser:appuser --from=builder /app /app
 
-RUN chown -R appuser:appgroup /app
-
+RUN install -d -o appuser -g appgroup /app/staticfiles \
+ && install -d -o appuser -g appgroup /app/media \
+ && install -d -o appuser -g appgroup /app/
 
 COPY /entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
