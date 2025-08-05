@@ -1,22 +1,55 @@
 from django.contrib import admin
-from .models import Donation
 from django.http import HttpResponse
 import csv
+from .models import Donation
+
 
 @admin.register(Donation)
 class DonationAdmin(admin.ModelAdmin):
-    list_display = ("created_at","name","email","amount","currency","status","payment_intent")
-    list_filter = ("status","currency","created_at")
-    search_fields = ("email","name","payment_intent")
+    list_display = (
+        "created_at",
+        "name",
+        "email",
+        "amount",
+        "currency",
+        "status",
+        "payment_intent",
+        "method",
+        "country",
+    )
+    list_filter = ("status", "currency", "created_at")
+    search_fields = ("email", "name", "payment_intent")
     actions = ["export_csv"]
 
+    @admin.action(description="Экспорт выделенных в CSV")
     def export_csv(self, request, queryset):
         resp = HttpResponse(content_type="text/csv")
         resp["Content-Disposition"] = 'attachment; filename="donations.csv"'
-        w = csv.writer(resp)
-        w.writerow(["created_at","name","email","amount","currency","status","payment_intent","method","country"])
+        writer = csv.writer(resp)
+
+        writer.writerow([
+            "created_at",
+            "name",
+            "email",
+            "amount",
+            "currency",
+            "status",
+            "payment_intent",
+            "method",
+            "country",
+        ])
+
         for d in queryset:
-            w.writerow([d.created_at, d.name, d.email, d.amount/100, d.currency.upper(),
-                        d.status, d.payment_intent, d.method, d.country])
+            writer.writerow([
+                d.created_at.isoformat(),
+                d.name or "",
+                d.email or "",
+                "{:.2f}".format(d.amount / 100),
+                d.currency.upper() if d.currency else "",
+                d.status,
+                d.payment_intent,
+                d.method or "",
+                d.country or "",
+            ])
+
         return resp
-    export_csv.short_description = "Экспорт выделенных в CSV"
