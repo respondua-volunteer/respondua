@@ -342,82 +342,66 @@
 
 
         <!-- Donate Start -->
-        <div class="donate" data-parallax="scroll" data-image-src="{% static 'img/donate.webp' %}">
-            <div class="container">
-                <div class="row align-items-center">
-                    <div class="col-lg-7">
-                        <div class="donate-content">
-                            <div class="section-header">
-                                <p>{% translate "Допомогти зараз" %}</p>
-                                <h2>{% translate "Населенню України потрібна ваша допомога" %}</h2>
-                            </div>
-                            <div class="donate-text">
-                                <p>
-                                    {% translate "Зробити добро і допомогти тим, хто цього потребує, завжди важливо." %} <br>
-                                    {% translate "Ваші донати допомагають нам розширювати нашу діяльність та надавати допомогу у надзвичайних ситуаціях." %} <br>
-                                    {% translate "Вони також дозволяють нам запускати нові проекти та підвищувати свідомість про важливі питання." %} <br>
-                                    {% translate "Приєднавшись до нас, ми зробимо набагато більше" %}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-5">
-                        <div class="donate-form" id="donate-section">
-                            <form id="choiceForm">
-                                <div class="control-group">
-                                    <input type="text" class="form-control" placeholder="{% translate "Iм'я" %}" required="required" />
-                                </div>
-                                <div class="control-group">
-                                    <input type="email" class="form-control" placeholder="Email" required="required" />
-                                </div>
-                                <div class="btn-group btn-group-toggle" data-toggle="buttons">
-                                    <label class="btn btn-custom active">
-                                        <input type="radio" name="options" checked value="10">
-                                        $10
-                                    </label>
-                                    <label class="btn btn-custom">
-                                        <input type="radio" name="options" value="20">
-                                        $20
-                                    </label>
-                                    <label class="btn btn-custom">
-                                        <input type="radio" name="options" value="30"> $30
-                                    </label>
-                                </div>
-                                <div>
-                                    <button class="btn btn-custom" type="submit" value>{% translate "Допомогти" %}</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
+        <form id="choiceForm" method="post">
+            {% csrf_token %}
+            <div class="control-group">
+                <input id="donorName" name="name" type="text" class="form-control" placeholder="{% translate "Iм'я" %}">
             </div>
-        </div>
+            <div class="control-group">
+                <input id="donorEmail" name="email" type="email" class="form-control" placeholder="Email">
+            </div>
+            <div class="control-group">
+                <input id="donationAmount" name="amount" type="number" step="0.01" min="1" class="form-control"
+                    placeholder="{% translate "Сума (напр. 20.00)" %}" required>
+            </div>
+            <div>
+                <button class="btn btn-custom" type="submit">{% translate "Допомогти" %}</button>
+            </div>
+        </form>
+
+        <!-- CSRF meta tag for JavaScript -->
+        <meta name="csrf-token" content="{{ csrf_token }}">
+
+        <!-- Stripe JS -->
+        <script src="https://js.stripe.com/v3/"></script>
         <script>
-            document.getElementById('choiceForm').addEventListener('submit', function(event) {
-                event.preventDefault(); // Остановить стандартное поведение формы
-    
-                // Получить выбранное значение
-                var selectedOption = document.querySelector('input[name="options"]:checked');
-    
-                if (selectedOption) {
-                    // Изменить адрес перенаправления в зависимости от выбора кнопки
-                    switch (selectedOption.value) {
-                        case '10':
-                            window.location.href = 'https://www.liqpay.ua/api/3/checkout?data=eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXlkb25hdGUiLCJhbW91bnQiOiIxMCIsImN1cnJlbmN5IjoiVVNEIiwiZGVzY3JpcHRpb24iOiLQv9C+0LbQtdGA0YLQstCwIiwicHVibGljX2tleSI6InNhbmRib3hfaTk3NjE4OTk0NDAzIiwibGFuZ3VhZ2UiOiJ1ayJ9&signature=Q61ZPWZRJjQi7j3pIhIdIz1GCs8=';
-                            break;
-                        case '20':
-                            window.location.href = 'https://www.liqpay.ua/api/3/checkout?data=eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXlkb25hdGUiLCJhbW91bnQiOiIyMCIsImN1cnJlbmN5IjoiVVNEIiwiZGVzY3JpcHRpb24iOiLQn9C+0LbQtdGA0YLQstGD0LLQsNC90L3RjyIsInB1YmxpY19rZXkiOiJzYW5kYm94X2k5NzYxODk5NDQwMyIsImxhbmd1YWdlIjoidWsifQ==&signature=7Af9fjtj04WElURRWSzoR81i21U=';
-                            break;
-                        case '30':
-                            window.location.href = 'https://www.liqpay.ua/api/3/checkout?data=eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXlkb25hdGUiLCJhbW91bnQiOiIzMCIsImN1cnJlbmN5IjoiVVNEIiwiZGVzY3JpcHRpb24iOiLQn9C+0LbQtdGA0YLQstCwIiwicHVibGljX2tleSI6InNhbmRib3hfaTk3NjE4OTk0NDAzIiwibGFuZ3VhZ2UiOiJ1ayJ9&signature=qLKWdo8qnBfdA3ha3hd7dfrw2Xw=';
-                            break;
-                        default:
-                            // По умолчанию перенаправление можно настроить на другую страницу
-                            window.location.href = 'https://www.liqpay.ua/api/3/checkout?data=eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXlkb25hdGUiLCJhbW91bnQiOiIxMCIsImN1cnJlbmN5IjoiVVNEIiwiZGVzY3JpcHRpb24iOiLQv9C+0LbQtdGA0YLQstCwIiwicHVibGljX2tleSI6InNhbmRib3hfaTk3NjE4OTk0NDAzIiwibGFuZ3VhZ2UiOiJ1ayJ9&signature=Q61ZPWZRJjQi7j3pIhIdIz1GCs8=';//
+            const stripe = Stripe("pk_test_51Rs7wlRr2wtUvFRZ9PnzAWeO9Idl23dGhCBN0GrZVz33oW9tKLU9lG5ubPKcDR4YvbfD8G594XleOxUC1RRrZHFr00wtSzDYc2");  // Подставляется из Django в контекст шаблона
+
+            document.getElementById('choiceForm').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const amount = document.getElementById('donationAmount').value;
+                const name = document.getElementById('donorName').value;
+                const email = document.getElementById('donorEmail').value;
+                const csrftoken = document.querySelector('meta[name="csrf-token"]').content;
+
+                try {
+                    const resp = await fetch("{% url 'create_checkout_session' %}", {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "X-CSRFToken": csrftoken
+                        },
+                        body: JSON.stringify({ amount, name, email })
+                    });
+
+                    const data = await resp.json();
+
+                    if (!resp.ok || !data || data.error) {
+                        alert(data?.error || "Сталася помилка при створенні сесії.");
+                        return;
                     }
+
+                    const { error } = await stripe.redirectToCheckout({ sessionId: data.id });
+                    if (error) alert(error.message);
+                } catch (err) {
+                    alert("Помилка з'єднання з сервером.");
                 }
             });
         </script>
+        <!-- Donate End -->
+
+
         <!-- Donate End -->
         
         

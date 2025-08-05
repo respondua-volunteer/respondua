@@ -3,10 +3,20 @@ import django
 from pathlib import Path
 from decouple import config
 from django.utils.encoding import smart_str
+from decouple import Config, RepositoryEnv
 
 django.utils.encoding.smart_text = smart_str
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+
+env_path = BASE_DIR / ".env"
+config = Config(RepositoryEnv(env_path))
+
+# Stripe donation settings
+DONATION_MIN = 1      # минимальная сумма в валюте
+DONATION_MAX = 1000   # максимальная сумма
+DONATION_CURRENCY = "pln"
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
@@ -34,7 +44,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'drf_spectacular',
     'debug_toolbar',
+    'donations'
 ]
+
+
+STRIPE_PUBLISHABLE_KEY = config("STRIPE_PUBLISHABLE_KEY")
+STRIPE_SECRET_KEY = config("STRIPE_SECRET_KEY")
+STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET")
 
 REST_FRAMEWORK = {
     # YOUR SETTINGS
