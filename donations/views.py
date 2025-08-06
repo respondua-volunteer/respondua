@@ -46,9 +46,14 @@ def create_checkout_session(request):
         return JsonResponse({"error": "Невалидная сума"}, status=400)
 
     min_amt = Decimal(str(settings.DONATION_MIN))
-    max_amt = Decimal(str(settings.DONATION_MAX))
-    if amount_decimal < min_amt or amount_decimal > max_amt:
-        return JsonResponse({"error": f"Сума має бути від {min_amt} до {max_amt}"}, status=400)
+    max_amt = settings.DONATION_MAX
+
+    if amount_decimal < min_amt:
+        return JsonResponse({"error": f"Сума має бути від {min_amt}"}, status=400)
+
+    if max_amt is not None and amount_decimal > Decimal(str(max_amt)):
+        return JsonResponse({"error": f"Сума має бути не більше {max_amt}"}, status=400)
+
 
     donor_name = (data.get("name") or "").strip()
     donor_email = (data.get("email") or "").strip()

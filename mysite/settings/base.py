@@ -15,7 +15,7 @@ config = Config(RepositoryEnv(env_path))
 
 # Stripe donation settings
 DONATION_MIN = 1      # минимальная сумма в валюте
-DONATION_MAX = 1000   # максимальная сумма
+DONATION_MAX = None   # максимальная сумма
 DONATION_CURRENCY = "pln"
 
 SECRET_KEY = config("SECRET_KEY")
