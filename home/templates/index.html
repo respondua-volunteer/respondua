@@ -338,26 +338,53 @@
         </div>
         <!-- Event End -->
 
-        
-
-
         <!-- Donate Start -->
-        <form id="choiceForm" method="post">
-            {% csrf_token %}
-            <div class="control-group">
-                <input id="donorName" name="name" type="text" class="form-control" placeholder="{% translate "Iм'я" %}">
+        <div class="donate" data-parallax="scroll" data-image-src="{% static 'img/donate.webp' %}">
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-lg-7">
+                        <div class="donate-content">
+                            <div class="section-header">
+                                <p>{% translate "Допомогти зараз" %}</p>
+                                <h2>{% translate "Населенню України потрібна ваша допомога" %}</h2>
+                            </div>
+                            <div class="donate-text">
+                                <p>
+                                    {% translate "Зробити добро і допомогти тим, хто цього потребує, завжди важливо." %}<br>
+                                    {% translate "Ваші донати допомагають нам розширювати нашу діяльність та надавати допомогу у надзвичайних ситуаціях." %}<br>
+                                    {% translate "Вони також дозволяють нам запускати нові проекти та підвищувати свідомість про важливі питання." %}<br>
+                                    {% translate "Приєднавшись до нас, ми зробимо набагато більше" %}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-5">
+                        <div class="donate-form" id="donate-section">
+                            <form id="choiceForm" method="post">
+                                {% csrf_token %}
+                                <div class="control-group mb-3">
+                                    <input id="donorName" name="name" type="text" class="form-control"
+                                        placeholder="{% translate "Iм'я" %}" required>
+                                </div>
+                                <div class="control-group mb-3">
+                                    <input id="donorEmail" name="email" type="email" class="form-control"
+                                        placeholder="Email" required>
+                                </div>
+                                <div class="control-group mb-3">
+                                    <input id="donationAmount" name="amount" type="number" step="0.01" min="1"
+                                        class="form-control" placeholder="{% translate "Сума (напр. 20.00)" %}" required>
+                                </div>
+                                <div class="d-grid">
+                                    <button class="btn btn-custom" type="submit">{% translate "Допомогти" %}</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
             </div>
-            <div class="control-group">
-                <input id="donorEmail" name="email" type="email" class="form-control" placeholder="Email">
-            </div>
-            <div class="control-group">
-                <input id="donationAmount" name="amount" type="number" step="0.01" min="1" class="form-control"
-                    placeholder="{% translate "Сума (напр. 20.00)" %}" required>
-            </div>
-            <div>
-                <button class="btn btn-custom" type="submit">{% translate "Допомогти" %}</button>
-            </div>
-        </form>
+        </div>
 
         <!-- CSRF meta tag for JavaScript -->
         <meta name="csrf-token" content="{{ csrf_token }}">
@@ -365,8 +392,7 @@
         <!-- Stripe JS -->
         <script src="https://js.stripe.com/v3/"></script>
         <script>
-            const stripe = Stripe("pk_test_51Rs7wlRr2wtUvFRZ9PnzAWeO9Idl23dGhCBN0GrZVz33oW9tKLU9lG5ubPKcDR4YvbfD8G594XleOxUC1RRrZHFr00wtSzDYc2");  // Подставляется из Django в контекст шаблона
-
+            const stripe = Stripe("{{ stripe_public_key }}");
             document.getElementById('choiceForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
 
@@ -400,12 +426,6 @@
             });
         </script>
         <!-- Donate End -->
-
-
-        <!-- Donate End -->
-        
-        
-
 
         <!-- Team Start -->
         <div class="team">

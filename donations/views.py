@@ -21,7 +21,8 @@ def success(request):
             s = stripe.checkout.Session.retrieve(sid, expand=["payment_intent"])
             ctx = {
                 "amount": Decimal(s.payment_intent.amount) / 100,
-                "currency": s.payment_intent.currency.upper()
+                "currency": s.payment_intent.currency.upper(),
+                "transaction_id": s.payment_intent.id
             }
         except Exception as e:
             print("❌ Ошибка получения сессии:", e)

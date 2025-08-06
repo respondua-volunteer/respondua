@@ -16,9 +16,14 @@ CACHE_TTL = getattr(settings, 'CACHE_TTL', DEFAULT_TIMEOUT)
 def home(request):
     events = Event.objects.filter(date__gte=timezone.now()).order_by('date')
     recent_posts = Post.objects.all()[:3]
-    is_home_page = True  
-    return render(request, 'home.html', {'events': events, 'recent_posts':recent_posts, 'is_home_page':is_home_page}, )#{'recent_posts': recent_posts}
+    is_home_page = True
 
+    return render(request, 'home.html', {
+        'events': events,
+        'recent_posts': recent_posts,
+        'is_home_page': is_home_page,
+        'stripe_public_key': settings.STRIPE_PUBLISHABLE_KEY
+    })
 
 @cache_page(CACHE_TTL)
 def team(request):
