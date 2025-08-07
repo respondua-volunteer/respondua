@@ -3,10 +3,20 @@ import django
 from pathlib import Path
 from decouple import config
 from django.utils.encoding import smart_str
+from decouple import Config, RepositoryEnv
 
 django.utils.encoding.smart_text = smart_str
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+
+env_path = BASE_DIR / ".env"
+config = Config(RepositoryEnv(env_path))
+
+# Stripe donation settings
+DONATION_MIN = 1      # минимальная сумма в валюте
+DONATION_MAX = None   # максимальная сумма
+DONATION_CURRENCY = "pln"
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
@@ -33,7 +43,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'rest_framework',
     'drf_spectacular',
-    'debug_toolbar',
+    'donations'
 ]
 
 REST_FRAMEWORK = {
@@ -59,7 +69,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
@@ -84,28 +93,6 @@ TEMPLATES = [
 WSGI_APPLICATION = 'mysite.wsgi.application'
 
 INTERNAL_IPS = ('127.0.0.1', '0.0.0.0', 'localhost')
-
-def show_toolbar(request):
-    return True
-
-DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
-}
-
-DEBUG_TOOLBAR_PANELS = [
-    'debug_toolbar.panels.versions.VersionsPanel',
-    'debug_toolbar.panels.timer.TimerPanel',
-    'debug_toolbar.panels.settings.SettingsPanel',
-    'debug_toolbar.panels.headers.HeadersPanel',
-    'debug_toolbar.panels.request.RequestPanel',
-    'debug_toolbar.panels.sql.SQLPanel',
-    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
-    'debug_toolbar.panels.templates.TemplatesPanel',
-    'debug_toolbar.panels.cache.CachePanel',
-    'debug_toolbar.panels.signals.SignalsPanel',
-    'debug_toolbar.panels.logging.LoggingPanel',
-    'debug_toolbar.panels.redirects.RedirectsPanel',
-]
 
 # Media files
 STATIC_URL = '/static/'

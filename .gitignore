@@ -212,3 +212,5 @@ Gemfile.lock
 staticfiles/
 
 media/
+
+.idea/*

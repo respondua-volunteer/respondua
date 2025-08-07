@@ -17,12 +17,13 @@ services:
     build: .
     container_name: volunteer
     restart: unless-stopped
-    env_file: mysite/.env.dev
+    env_file: .env
     environment:
       - REDIS_HOST=redis
     volumes:
       - static_volume:/app/staticfiles
       - media_volume:/app/mysite/media
+      - ./.env:/app/.env
     ports:
       - "8000:8000"
     depends_on:
