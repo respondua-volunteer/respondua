@@ -13,7 +13,7 @@ class Donation(models.Model):
     amount = models.DecimalField(
         max_digits=10,
         decimal_places=2,
-        help_text="В валюте (например, 77.00 PLN или 15.50 USD)"
+        help_text="In currency (e.g., 77.00 PLN or 15.50 USD)"
     )
 
     currency = models.CharField(max_length=10, default="pln")

@@ -25,7 +25,7 @@ def success(request):
                 "transaction_id": s.payment_intent.id
             }
         except Exception as e:
-            print("❌ Ошибка получения сессии:", e)
+            print("Session retrieval error:", e)
     return render(request, "donations/success.html", ctx)
 
 
@@ -43,16 +43,16 @@ def create_checkout_session(request):
     try:
         amount_decimal = Decimal(str(data.get("amount")))
     except (TypeError, ValueError):
-        return JsonResponse({"error": "Невалидна сума"}, status=400)
+        return JsonResponse({"error": "Invalid amount"}, status=400)
 
     min_amt = Decimal(str(settings.DONATION_MIN))
     max_amt = settings.DONATION_MAX
 
     if amount_decimal < min_amt:
-        return JsonResponse({"error": f"Сума має бути від {min_amt}"}, status=400)
+        return JsonResponse({"error": f"The amount must be from {min_amt}"}, status=400)
 
     if max_amt is not None and amount_decimal > Decimal(str(max_amt)):
-        return JsonResponse({"error": f"Сума має бути не більше {max_amt}"}, status=400)
+        return JsonResponse({"error": f"The amount must not exceed {max_amt}"}, status=400)
 
     donor_name = (data.get("name") or "").strip()
     donor_email = (data.get("email") or "").strip()
@@ -86,7 +86,7 @@ def create_checkout_session(request):
 
         pi_id = session.get("payment_intent")
         if pi_id:
-            print("💾 Сохраняем Donation:", pi_id, amount_decimal, donor_email, donor_name)
+            print("Save Donation:", pi_id, amount_decimal, donor_email, donor_name)
             Donation.objects.get_or_create(
                 payment_intent=pi_id,
                 defaults=dict(
@@ -116,7 +116,7 @@ def stripe_webhook(request):
     try:
         event = stripe.Webhook.construct_event(payload, sig, settings.STRIPE_WEBHOOK_SECRET)
     except Exception as e:
-        print("❌ Stripe webhook signature error:", e)
+        print("Stripe webhook signature error:", e)
         return HttpResponse(status=400)
 
     if event["type"] == "payment_intent.succeeded":
@@ -125,7 +125,7 @@ def stripe_webhook(request):
         try:
             pi = stripe.PaymentIntent.retrieve(pi_id)
         except Exception as e:
-            print("❌ Не удалось получить PaymentIntent:", e)
+            print("Unable to obtain PaymentIntent:", e)
             return HttpResponse(status=400)
 
         amount_minor = pi.get("amount", 0)
@@ -146,13 +146,12 @@ def stripe_webhook(request):
             method = payment_method_details.get("type", "")
             country = charge.get("billing_details", {}).get("address", {}).get("country", "")
 
-            # Если метод — карта, пробуем получить brand и funding
             if method == "card":
                 card_info = payment_method_details.get("card", {})
                 card_brand = card_info.get("brand", "")
                 funding = card_info.get("funding", "")
         except Exception as e:
-            print("❌ Не удалось получить charge:", e)
+            print("Unable to obtain charge:", e)
 
         Donation.objects.update_or_create(
             payment_intent=pi_id,
@@ -170,26 +169,26 @@ def stripe_webhook(request):
             )
         )
 
-        print("✅ Donation сохранён:", pi_id, f"{amount_decimal:.2f} {currency.upper()}", email, name, method, country, card_brand, funding)
+        print("Donation save:", pi_id, f"{amount_decimal:.2f} {currency.upper()}", email, name, method, country, card_brand, funding)
 
         if email:
             try:
                 send_mail(
-                    subject="Дякуємо за донат!",
-                    message=f"Дякуємо, {name or 'друже'}! Отримали {amount_decimal:.2f} {currency.upper()}.",
+                    subject="Thank you for your donation.!",
+                    message=f"Thank, {name or 'friend'}! Received {amount_decimal:.2f} {currency.upper()}.",
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     recipient_list=[email],
                     fail_silently=True,
                 )
             except Exception as e:
-                print("⚠️ Ошибка при отправке email:", e)
+                print("Error sending email:", e)
 
     elif event["type"] == "charge.refunded":
         try:
             pi_id = event["data"]["object"]["payment_intent"]
             Donation.objects.filter(payment_intent=pi_id).update(status="refunded")
         except Exception as e:
-            print("❌ Ошибка обработки refunded:", e)
+            print("Refunded processing error:", e)
 
     return HttpResponse(status=200)
 

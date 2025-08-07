@@ -10,7 +10,6 @@ coreschema==0.0.4
 Django==5.2.4
 django-ckeditor==6.7.0
 django-ckeditor-5==0.2.18
-django-debug-toolbar==6.0.0
 django-extensions==4.1
 django-jazzmin==3.0.1
 django-js-asset==3.1.2

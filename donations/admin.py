@@ -43,7 +43,7 @@ class DonationAdmin(admin.ModelAdmin):
     def export_csv(self, request, queryset):
         resp = HttpResponse(content_type="text/csv; charset=utf-8")
         resp["Content-Disposition"] = 'attachment; filename="donations.csv"'
-        resp.write('\ufeff')  # BOM for Excel
+        resp.write('\ufeff')
 
         writer = csv.writer(resp)
         writer.writerow([
@@ -76,4 +76,4 @@ class DonationAdmin(admin.ModelAdmin):
             ])
 
         return resp
-    export_csv.short_description = "Экспорт выделенных в CSV"
+    export_csv.short_description = "Export selected items to CSV"
