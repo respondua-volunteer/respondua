@@ -43,7 +43,7 @@ def create_checkout_session(request):
     try:
         amount_decimal = Decimal(str(data.get("amount")))
     except (TypeError, ValueError):
-        return JsonResponse({"error": "Невалидная сума"}, status=400)
+        return JsonResponse({"error": "Невалидна сума"}, status=400)
 
     min_amt = Decimal(str(settings.DONATION_MIN))
     max_amt = settings.DONATION_MAX
@@ -53,7 +53,6 @@ def create_checkout_session(request):
 
     if max_amt is not None and amount_decimal > Decimal(str(max_amt)):
         return JsonResponse({"error": f"Сума має бути не більше {max_amt}"}, status=400)
-
 
     donor_name = (data.get("name") or "").strip()
     donor_email = (data.get("email") or "").strip()
@@ -95,7 +94,9 @@ def create_checkout_session(request):
                     email=donor_email,
                     amount=amount_decimal,
                     currency=currency,
-                    status="pending"
+                    status="pending",
+                    method="",
+                    country="",
                 )
             )
 
@@ -119,35 +120,39 @@ def stripe_webhook(request):
         return HttpResponse(status=400)
 
     if event["type"] == "payment_intent.succeeded":
-        pi = event["data"]["object"]
+        pi_id = event["data"]["object"]["id"]
 
-        # Расширяем charges вручную, если пусто
-        if not pi.get("charges") or not pi["charges"].get("data"):
-            try:
-                pi = stripe.PaymentIntent.retrieve(
-                    pi["id"],
-                    expand=["charges.data.payment_method_details", "charges.data.billing_details"]
-                )
-            except Exception as e:
-                print("❌ Не удалось получить charges:", e)
+        try:
+            pi = stripe.PaymentIntent.retrieve(pi_id)
+        except Exception as e:
+            print("❌ Не удалось получить PaymentIntent:", e)
+            return HttpResponse(status=400)
 
-        pi_id = pi.get("id")
         amount_minor = pi.get("amount", 0)
         amount_decimal = Decimal(amount_minor) / 100
         currency = pi.get("currency", settings.DONATION_CURRENCY).lower()
         name = pi.metadata.get("donor_name", "") if pi.metadata else ""
         email = pi.get("receipt_email") or pi.get("customer_email") or ""
 
+        charge = {}
         method = ""
         country = ""
+        card_brand = ""
+        funding = ""
+
         try:
-            charges = pi.get("charges", {}).get("data", [])
-            if charges:
-                charge = charges[0]
-                method = charge.get("payment_method_details", {}).get("type", "")
-                country = charge.get("billing_details", {}).get("address", {}).get("country", "")
+            charge = stripe.Charge.retrieve(pi.get("latest_charge"))
+            payment_method_details = charge.get("payment_method_details", {})
+            method = payment_method_details.get("type", "")
+            country = charge.get("billing_details", {}).get("address", {}).get("country", "")
+
+            # Если метод — карта, пробуем получить brand и funding
+            if method == "card":
+                card_info = payment_method_details.get("card", {})
+                card_brand = card_info.get("brand", "")
+                funding = card_info.get("funding", "")
         except Exception as e:
-            print("⚠️ Ошибка при разборе charge:", e)
+            print("❌ Не удалось получить charge:", e)
 
         Donation.objects.update_or_create(
             payment_intent=pi_id,
@@ -159,11 +164,13 @@ def stripe_webhook(request):
                 status="succeeded",
                 method=method,
                 country=country,
+                card_brand=card_brand,
+                funding=funding,
                 raw=pi,
             )
         )
 
-        print("✅ Donation сохранён:", pi_id, f"{amount_decimal:.2f} {currency.upper()}", email, name, method, country)
+        print("✅ Donation сохранён:", pi_id, f"{amount_decimal:.2f} {currency.upper()}", email, name, method, country, card_brand, funding)
 
         if email:
             try:

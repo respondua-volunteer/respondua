@@ -20,6 +20,8 @@ class Donation(models.Model):
     payment_intent = models.CharField(max_length=255, unique=True)
     method = models.CharField(max_length=50, blank=True)
     country = models.CharField(max_length=2, blank=True)
+    card_brand = models.CharField(max_length=20, blank=True, default="")
+    funding = models.CharField(max_length=20, blank=True, default="")
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default="pending")
     raw = models.JSONField(default=dict, blank=True)
 
