@@ -342,6 +342,7 @@
         <div class="donate" data-parallax="scroll" data-image-src="{% static 'img/donate.webp' %}">
             <div class="container">
                 <div class="row align-items-center">
+                    <!-- Left Side Content -->
                     <div class="col-lg-7">
                         <div class="donate-content">
                             <div class="section-header">
@@ -359,40 +360,114 @@
                         </div>
                     </div>
 
+                    <!-- Right Side Form -->
                     <div class="col-lg-5">
                         <div class="donate-form" id="donate-section">
                             <form id="choiceForm" method="post">
                                 {% csrf_token %}
+
+                                <!-- Name -->
                                 <div class="control-group mb-3">
                                     <input id="donorName" name="name" type="text" class="form-control"
                                         placeholder="{% translate "Iм'я" %}" required>
                                 </div>
+
+                                <!-- Email -->
                                 <div class="control-group mb-3">
                                     <input id="donorEmail" name="email" type="email" class="form-control"
                                         placeholder="Email" required>
                                 </div>
+
+                                <!-- Amount Selection -->
+                                <div class="donation-options mb-3 d-flex flex-wrap">
+                                    <input type="radio" id="btn10" name="amount_choice" value="10" checked>
+                                    <label for="btn10">$10</label>
+
+                                    <input type="radio" id="btn20" name="amount_choice" value="20">
+                                    <label for="btn20">$20</label>
+
+                                    <input type="radio" id="btnCustom" name="amount_choice" value="custom">
+                                    <label for="btnCustom">{% translate "Інша сума" %}</label>
+                                </div>
+
+                                <!-- Custom amount -->
                                 <div class="control-group mb-3">
                                     <input id="donationAmount" name="amount" type="number" step="0.01" min="1"
                                         class="form-control" placeholder="{% translate "Сума (напр. 20.00)" %}" required>
                                 </div>
+
+                                <!-- Submit -->
                                 <div class="d-grid">
                                     <button class="btn btn-custom" type="submit">{% translate "Допомогти" %}</button>
                                 </div>
                             </form>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
 
-        <!-- CSRF meta tag for JavaScript -->
+        <!-- Styling: Donation Buttons -->
+        <style>
+            .donation-options input[type="radio"] {
+                display: none;
+            }
+
+            .donation-options label {
+                border: 2px solid #fff;
+                border-radius: 5px;
+                padding: 10px 20px;
+                margin-right: 10px;
+                background-color: transparent;
+                color: #fff;
+                font-weight: bold;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+            }
+
+            .donation-options input[type="radio"]:checked + label {
+                background-color: #fff;
+                color: #fcbf3d;
+            }
+
+            @media (max-width: 576px) {
+                .donation-options label {
+                    display: block;
+                    width: 100%;
+                    margin-bottom: 10px;
+                }
+            }
+        </style>
+
+        <!-- CSRF meta tag for JS -->
         <meta name="csrf-token" content="{{ csrf_token }}">
 
         <!-- Stripe JS -->
         <script src="https://js.stripe.com/v3/"></script>
+
+        <!-- Donation logic -->
         <script>
             const stripe = Stripe("{{ stripe_public_key }}");
+
+            document.addEventListener("DOMContentLoaded", function () {
+                const amountInput = document.getElementById("donationAmount");
+                const btn10 = document.getElementById("btn10");
+                const btn20 = document.getElementById("btn20");
+                const btnCustom = document.getElementById("btnCustom");
+
+                function updateAmount(value, readonly) {
+                    amountInput.value = value;
+                    amountInput.readOnly = readonly;
+                }
+
+                btn10.addEventListener("change", () => updateAmount("10.00", true));
+                btn20.addEventListener("change", () => updateAmount("20.00", true));
+                btnCustom.addEventListener("change", () => updateAmount("", false));
+
+                // Default to $10
+                updateAmount("10.00", true);
+            });
+
             document.getElementById('choiceForm').addEventListener('submit', async function (e) {
                 e.preventDefault();
 

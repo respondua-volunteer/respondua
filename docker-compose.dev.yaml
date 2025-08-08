@@ -1,4 +1,9 @@
 services:
+  # x-logging: &loki-logging
+  #   driver: loki
+  #   options:
+  #     loki-url: "http://loki:3100/api/prom/push"  # имя сервиса в сети compose
+
   nginx: 
     restart: unless-stopped
     container_name: nginx
@@ -28,6 +33,7 @@ services:
       - "8000:8000"
     depends_on:
       - redis  
+    # logging: *loki-logging
 
   redis:
     # image: redis:7.2.0-alpine3.18
@@ -45,7 +51,50 @@ services:
     cap_add:
       - SYS_ADMIN
 
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    # depends_on:
+    #   - prometheus
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana_data:/var/lib/grafana
+      # - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning
+    ports:
+      - "3000:3000"
+
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log
+      - /etc/machine-id:/etc/machine-id:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/promtail:/etc/promtail:ro
+      - promtail_data:/tmp
+    command: -config.file=/etc/promtail/promtail-config.yml
+    depends_on:
+      - loki
+
+
 volumes:
   redisdata:
   static_volume:
   media_volume:
+  grafana_data:
+  loki_data:
+  promtail_data:
+

@@ -1,0 +1,82 @@
+server:
+  http_listen_port: 9080
+  grpc_listen_port: 0
+
+positions:
+  filename: /tmp/positions.yaml
+
+clients:
+  - url: http://loki:3100/loki/api/v1/push
+
+scrape_configs:
+  - job_name: docker
+    docker_sd_configs:
+      - host: unix:///var/run/docker.sock
+        refresh_interval: 2s
+
+    relabel_configs:
+      - source_labels: ['__meta_docker_container_name']
+        target_label: container_name
+        regex: '/(.*)'
+        replacement: '$1'
+      - source_labels: ['__meta_docker_container_id']
+        target_label: container_id
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_service']
+        target_label: compose_service
+      - source_labels: ['__meta_docker_container_label_com_docker_compose_project']
+        target_label: compose_project
+      - source_labels: ['__meta_docker_container_log_stream']
+        target_label: stream
+      - source_labels: ['__meta_docker_container_logpath']
+        target_label: __path__
+      - source_labels: ['__meta_docker_container_label_env']
+        target_label: env
+
+    pipeline_stages:
+      # 1) docker json -> поле log
+      - docker: {}
+
+      # 2) основной JSON твоего логгера (django/gunicorn)
+      - json:
+          expressions:
+            ts: '["@timestamp"]'
+            level: levelname
+            logger: name
+            msg: message
+
+      # 3) лейблы
+      - labels:
+          level: level
+          logger: logger
+
+      # 4) logfmt: распарсим key=value из msg
+      #    (некоторые ключи типичны для Stripe/gunicorn — добавь свои при желании)
+      - logfmt:
+          source: msg
+          mapping:
+            message: kv_message         # чтобы не перетёрло исходный msg
+            path: path
+            method: method
+            status: status
+            response_code: response_code
+            request_id: request_id
+            duration_ms: duration_ms
+            latency: latency
+            ip: ip
+            referrer: referrer
+            user_agent: user_agent
+
+      # 5) если внутри msg JSON — вытащим типовые поля (не мешает, просто best-effort)
+      - json:
+          source: msg
+          expressions:
+            j_path: path
+            j_response_code: response_code
+            j_method: method
+            j_status: status
+            j_error: error
+
+      # 6) нормализуем время
+      - timestamp:
+          source: ts
+          format: RFC3339Nano

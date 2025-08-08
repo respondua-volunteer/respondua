@@ -8,4 +8,4 @@ python manage.py migrate --noinput
 echo "Collecting static files..."
 python manage.py collectstatic --noinput
 
-exec gunicorn --bind 0.0.0.0:8000 --workers 3 --timeout 120 mysite.wsgi:application
+exec gunicorn -c gunicorn.conf.py mysite.wsgi:application

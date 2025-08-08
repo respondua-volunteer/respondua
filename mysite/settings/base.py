@@ -4,6 +4,8 @@ from pathlib import Path
 from decouple import config
 from django.utils.encoding import smart_str
 from decouple import Config, RepositoryEnv
+import logging.config
+from django.utils.log import DEFAULT_LOGGING
 
 django.utils.encoding.smart_text = smart_str
 
@@ -23,6 +25,70 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*").split(",")
 
 CSRF_TRUSTED_ORIGINS = ['https://*.respondua.org']
+
+LOGGING_CONFIG = None
+
+LOGLEVEL = os.getenv("LOGLEVEL", "INFO").upper()
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'json': {
+            'class': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s',
+        },
+        'django.server': DEFAULT_LOGGING['formatters']['django.server'],
+    },
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'json',
+        },
+        'django.server': DEFAULT_LOGGING['handlers']['django.server'],
+    },
+
+    'loggers': {
+        '': {
+            'handlers': ['console'],
+            'level': LOGLEVEL,
+        },
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+        'django.server': DEFAULT_LOGGING['loggers']['django.server'],
+        'app': {
+            'handlers': ['console'],
+            'level': LOGLEVEL,
+            'propagate': False,
+        },
+        'app.donations': {
+            'handlers': ['console'],
+            'level': LOGLEVEL,
+            'propagate': False,
+        },
+        'blog': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'blog.views': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
 
 INSTALLED_APPS = [
     'modeltranslation',
@@ -178,3 +244,11 @@ AUTH_PASSWORD_VALIDATORS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CACHE_TTL = 60 * 3
+
+import logging.config
+logging.config.dictConfig(LOGGING)
+
+
+# {container="volunteer"} |= "ERROR"
+# {container="volunteer"} |= "Donation"
+# {container="volunteer"} |~ "INFO|ERROR"
