@@ -68,17 +68,12 @@ services:
 
   loki:
     image: grafana/loki:2.9.4
-    # user: "0"  # root
     container_name: loki
     ports:
       - "3100:3100"
     command: -config.file=/etc/loki/local-config.yaml
-    # volumes:
-    #   - ./docker/loki:/etc/loki
-    #   - ./docker/loki/wal:/wal
-    #   - ./docker/loki/index:/loki/index
-    #   - ./docker/loki/boltdb-cache:/loki/boltdb-cache
-    #   - ./docker/loki/chunks:/loki/chunks
+    volumes:
+      - loki_data:/loki
 
   promtail:
     image: grafana/promtail:2.9.4
@@ -86,9 +81,10 @@ services:
     volumes:
       - /var/log:/var/log
       - /etc/machine-id:/etc/machine-id:ro
-      - ./docker/promtail:/etc/promtail
       - /var/lib/docker/containers:/var/lib/docker/containers:ro
       - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/promtail:/etc/promtail:ro
+      - promtail_data:/tmp
     command: -config.file=/etc/promtail/promtail-config.yml
     depends_on:
       - loki
@@ -99,8 +95,6 @@ volumes:
   static_volume:
   media_volume:
   grafana_data:
-  loki_wal:
-  loki_index:
-  loki_cache:
-  loki_chunks:
+  loki_data:
+  promtail_data:
 

@@ -29,8 +29,6 @@ CSRF_TRUSTED_ORIGINS = ['https://*.respondua.org']
 LOGGING_CONFIG = None
 
 LOGLEVEL = os.getenv("LOGLEVEL", "INFO").upper()
-LOG_DIR = BASE_DIR / 'logs'
-LOG_DIR.mkdir(exist_ok=True)
 
 LOGGING = {
     'version': 1,
@@ -47,7 +45,7 @@ LOGGING = {
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
-            'formatter': 'json',   # 🟢 Теперь JSON!
+            'formatter': 'json',
         },
         'django.server': DEFAULT_LOGGING['handlers']['django.server'],
     },
@@ -76,6 +74,16 @@ LOGGING = {
         'app.donations': {
             'handlers': ['console'],
             'level': LOGLEVEL,
+            'propagate': False,
+        },
+        'blog': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'blog.views': {
+            'handlers': ['console'],
+            'level': 'INFO',
             'propagate': False,
         },
     },
