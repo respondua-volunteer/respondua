@@ -3,7 +3,7 @@ import django
 from pathlib import Path
 from decouple import config
 from django.utils.encoding import smart_str
-from decouple import Config, RepositoryEnv
+from decouple import AutoConfig, Config, RepositoryEnv, Csv
 import logging.config
 from django.utils.log import DEFAULT_LOGGING
 
@@ -12,8 +12,13 @@ django.utils.encoding.smart_text = smart_str
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
-env_path = BASE_DIR / ".env"
-config = Config(RepositoryEnv(env_path))
+ENV_FILE = config("ENV_FILE", ".env")
+candidate = BASE_DIR / ENV_FILE
+
+if candidate.exists():
+    config = Config(RepositoryEnv(candidate))
+else:
+    config = AutoConfig(search_path=str(BASE_DIR))
 
 # Stripe donation settings
 DONATION_MIN = 1      # минимальная сумма в валюте
@@ -22,7 +27,7 @@ DONATION_CURRENCY = "pln"
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*").split(",")
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*", cast=Csv())
 
 CSRF_TRUSTED_ORIGINS = ['https://*.respondua.org']
 

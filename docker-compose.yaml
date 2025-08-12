@@ -39,6 +39,22 @@ services:
     depends_on:
       - postgres
       - redis
+  volunteer-dev:
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:dev-1.0.0
+    container_name: volunteer-dev
+    restart: unless-stopped
+    env_file: .env.dev
+    environment:
+      - REDIS_HOST=redis
+      - ENV_FILE=.env.dev
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      - "8001:8000"
+    depends_on:
+      - postgres
+      - redis
   redis:
     image: redis:7.2.0-alpine3.18
     container_name: redis
