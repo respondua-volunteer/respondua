@@ -40,7 +40,7 @@ services:
       - postgres
       - redis
   volunteer-dev:
-    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:dev-1.0.0
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:dev-v1.0.1
     container_name: volunteer-dev
     restart: unless-stopped
     env_file: .env.dev
