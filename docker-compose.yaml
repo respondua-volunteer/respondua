@@ -25,7 +25,7 @@ services:
       - ./docker/nginx/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   volunteer:
-    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.1.1
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.1.2
     container_name: volunteer
     restart: unless-stopped
     env_file: .env
@@ -89,6 +89,7 @@ services:
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
     command: >
       postgres -c config_file=/etc/postgresql/postgresql.conf -c hba_file=/etc/postgresql/pg_hba.conf
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 30s
@@ -180,7 +181,6 @@ services:
     command: -config.file=/etc/loki/local-config.yaml
     volumes:
       - loki_data:/loki
-
   promtail:
     image: grafana/promtail:2.9.4
     container_name: promtail
