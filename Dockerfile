@@ -18,7 +18,7 @@ WORKDIR /app
 
 RUN set -ex \
   && apk add --no-cache --update \
-    libpq
+    libpq gettext
     
     
 # Create a group and user

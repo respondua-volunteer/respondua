@@ -25,17 +25,34 @@ services:
       - ./docker/nginx/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   volunteer:
-    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.0.6
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.1.1
     container_name: volunteer
     restart: unless-stopped
     env_file: .env
     environment:
       - REDIS_HOST=redis
+      - ENV_FILE=.env
     volumes:
       - static_volume:/app/static
       - media_volume:/app/media
     ports:
       - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
+  volunteer-dev:
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:dev-v1.0.1
+    container_name: volunteer-dev
+    restart: unless-stopped
+    env_file: .env.dev
+    environment:
+      - REDIS_HOST=redis
+      - ENV_FILE=.env.dev
+    volumes:
+      - static_volume:/app/static
+      - media_volume:/app/media
+    ports:
+      - "8001:8000"
     depends_on:
       - postgres
       - redis
@@ -71,8 +88,7 @@ services:
       - ./config/postgresql.conf:/etc/postgresql/postgresql.conf
       - ./config/pg_hba.conf:/etc/postgresql/pg_hba.conf
     command: >
-      postgres -c config_file=/etc/postgresql/postgresql.conf
-               -c hba_file=/etc/postgresql/pg_hba.conf
+      postgres -c config_file=/etc/postgresql/postgresql.conf -c hba_file=/etc/postgresql/pg_hba.conf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres -d postgres"]
       interval: 30s
@@ -133,6 +149,12 @@ services:
       - GF_AUTH_GITHUB_API_URL=https://api.github.com/user
       # - GF_AUTH_GITHUB_ALLOWED_ORGANIZATIONS=respondua
       - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+      - GF_DATABASE_TYPE=postgres
+      - GF_DATABASE_HOST=postgres:5432
+      - GF_DATABASE_NAME=grafana
+      - GF_DATABASE_USER=grafana
+      - GF_DATABASE_PASSWORD=${GRAFANA_DB_PASSWORD}
+      - GF_DATABASE_SSL_MODE=disable
     volumes:
       - grafana_data:/var/lib/grafana
       - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini
@@ -150,6 +172,28 @@ services:
       - "9187:9187"
     depends_on:
       - postgres
+  loki:
+    image: grafana/loki:2.9.4
+    container_name: loki
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - loki_data:/loki
+
+  promtail:
+    image: grafana/promtail:2.9.4
+    container_name: promtail
+    volumes:
+      - /var/log:/var/log
+      - /etc/machine-id:/etc/machine-id:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker/promtail:/etc/promtail:ro
+      - promtail_data:/tmp
+    command: -config.file=/etc/promtail/promtail-config.yml
+    depends_on:
+      - loki
 volumes:
   postgres_data:
   redisdata:
@@ -157,3 +201,5 @@ volumes:
   media_volume:
   grafana_data:
   prometheus_data:
+  loki_data:
+  promtail_data:
