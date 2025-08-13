@@ -87,3 +87,14 @@ To make "DJANGO_SETTINGS_MODULE=mysite.settings.dev python manage.py runserver" 
 ```shell
 docker compose -f docker-compose.dev.yaml up --build -d
 
+
+python manage.py makemessages \
+  -l en -l uk \
+  -i "venv/*" -i ".venv/*" -i "env/*" \
+  -i "node_modules/*" -i "static/*" \
+  -i "*/site-packages/*" -i "build/*" -i "dist/*"
+
+python manage.py compilemessages \
+  -i "venv/*" -i ".venv/*" -i "env/*" \
+  -i "node_modules/*" -i "static/*" \
+  -i "*/site-packages/*" -i "build/*" -i "dist/*"
