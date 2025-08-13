@@ -214,3 +214,5 @@ staticfiles/
 media/
 
 .idea/*
+
+.env.dev

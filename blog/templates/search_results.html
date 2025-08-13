@@ -1,66 +1,127 @@
 {% extends 'blog.html' %}
 {% load static %}
 {% load i18n %}
+{% load search_extras %}
 
-    <!-- <h1>Результаты поиска</h1> -->
+{% block content %}
 
-    <!-- <p>Вы искали: "{{ query }}"</p> -->
+<div class="blog">
+  <div class="container">
+    <div class="section-header text-center">
+      <p>{% translate "Блог" %}</p>
+      <h2>{% translate "Останні новини та статті безпосередньо з нашого блогу" %}</h2>
+    </div>
 
-<!-- Blog Start -->
-        {% block content %}
-        <div class="blog">
-            <div class="container">
-                <div class="section-header text-center">
-                    <p>{% translate "Блог" %}</p>
-                    <h2>{% translate "Останні новини та статті безпосередньо з нашого блогу" %}</h2>
-                </div>
+    <div class="row justify-content-end mb-4">
+      <div class="col-lg-5 col-xl-4">
+        <div class="sidebar">
+          <div class="sidebar-widget">
+            <div class="search-widget">
+              <form action="{% url 'search_posts' %}" method="get" role="search" aria-label="{% translate 'Пошук по блогу' %}">
+                <label for="search-q" class="sr-only">{% translate "Пошук" %}</label>
+                <input id="search-q"
+                       class="form-control"
+                       type="text"
+                       name="q"
+                       value="{{ query|default:'' }}"
+                       placeholder="{% translate 'Пошук…' %}"
+                       autocomplete="off">
+                <button class="btn" type="submit" aria-label="{% translate 'Шукати' %}">
+                  <i class="fa fa-search"></i>
+                </button>
+              </form>
             </div>
+          </div>
         </div>
-            <div class="container">
-                <div class="row">
-                    <div class="col-lg-4 offset-lg-8">
-                    <!-- <div class="col-lg-8 offset-lg-2"> -->
-                        <div class="sidebar">
-                            <div class="sidebar-widget">
-                                <div class="search-widget">
-                                    <form action="{% url 'search_posts' %}">
-                                        <input class="form-control" type="text" name="q" placeholder="Search Keyword">
-                                        <button class="btn"><i class="fa fa-search"></i></button>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        {% if results %}
-            <div class="blog">
-                <div class="container"> 
-                    <div class="row">
-                        {% for post in results %}
-                        <div class="col-lg-4">
-                            <div class="blog-item">
-                                <div class="blog-img">
-                                    <img src="{{post.image.url}}" alt="Image">
-                                </div>
-                                <div class="blog-text">
-                                    <h3><a href="{% url 'post_detail' post.slug  %}">{{ post.title }}</a></h3>
-                                    <p class="text-eclipse">
-                                        {{post.content|slice:":200"| safe }}
-                                    </p>
-                                </div>
-                                <div class="blog-meta">
-                                    <p><i class="fa fa-user"></i><a>{{ post.author }}</a></p>
-                                    <!-- <p><i class="fa fa-comments"></i><a href="">15 Comments</a></p> -->
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-            </div>
-        {% else %}
-            <p class="no-results"> {% translate "Нічого не знайдено" %}</p>
-        {% endif %}
-        {% endblock content %}
+      </div>
+    </div>
 
+    {% if results %}
+      <h5 class="mb-3">
+        {% translate "Результати пошуку" %}: “{{ query }}”
+        <span class="text-muted">({{ results.paginator.count }})</span>
+      </h5>
+
+      <div class="row">
+        {% for post in results %}
+          <div class="col-lg-4">
+            <div class="blog-item">
+              <div class="blog-img">
+                {% if post.image %}
+                  <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                {% else %}
+                  <img src="{% static 'img/placeholder.webp' %}" alt="{% translate 'Зображення відсутнє' %}">
+                {% endif %}
+              </div>
+
+              <div class="blog-text">
+                <h3>
+                  <a href="{% url 'post_detail' slug=post.slug %}">
+                    {% if post.hl_title %}
+                      {{ post.hl_title|safe }}
+                    {% else %}
+                      {{ post.title|highlight:query }}
+                    {% endif %}
+                  </a>
+                </h3>
+
+                <p class="text-eclipse">
+                  {% if post.hl_excerpt %}
+                    {{ post.hl_excerpt|safe }}
+                  {% else %}
+                    {{ post.content|striptags|truncatechars:200|highlight:query }}
+                  {% endif %}
+                </p>
+              </div>
+
+              <div class="blog-meta">
+                <p>
+                  <i class="fa fa-user"></i>
+                  <a>{{ post.author|highlight:query }}</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if results.has_other_pages %}
+        <nav class="mt-3" aria-label="{% translate 'Навігація сторінками' %}">
+          <ul class="pagination">
+            {% if results.has_previous %}
+              <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ results.previous_page_number }}">«</a>
+              </li>
+            {% endif %}
+            <li class="page-item disabled">
+              <span class="page-link">{{ results.number }}/{{ results.paginator.num_pages }}</span>
+            </li>
+            {% if results.has_next %}
+              <li class="page-item">
+                <a class="page-link" href="?q={{ query }}&page={{ results.next_page_number }}">»</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <p class="no-results text-center">
+        {% translate "Нічого не знайдено." %} {% if query %}— “{{ query }}”{% endif %}
+      </p>
+
+      {% if similar %}
+        <div class="mt-3">
+          <p>{% translate "Можливо, ви мали на увазі:" %}</p>
+          <ul>
+            {% for post in similar %}
+              <li><a href="{% url 'post_detail' slug=post.slug %}">{{ post.title|highlight:query }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+
+{% endblock content %}

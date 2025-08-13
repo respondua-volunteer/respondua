@@ -27,7 +27,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - redis  
+      - redis
 
   redis:
     # image: redis:7.2.0-alpine3.18
@@ -45,26 +45,8 @@ services:
     cap_add:
       - SYS_ADMIN
 
-  grafana:
-    image: grafana/grafana:latest
-    container_name: grafana
-    # depends_on:
-    #   - prometheus
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    volumes:
-      - grafana_data:/var/lib/grafana
-      # - ./docker/grafana/grafana.ini:/etc/grafana/grafana.ini
-      - ./docker/grafana/provisioning:/etc/grafana/provisioning
-    ports:
-      - "3000:3000"
-
 volumes:
   redisdata:
   static_volume:
   media_volume:
-  grafana_data:
-  loki_data:
-  promtail_data:
 
