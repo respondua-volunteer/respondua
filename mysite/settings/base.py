@@ -228,6 +228,11 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+# modeltranslation
+MODELTRANSLATION_DEFAULT_LANGUAGE = "uk"
+MODELTRANSLATION_LANGUAGES = ("uk", "en")
+MODELTRANSLATION_FALLBACK_LANGUAGES = ("uk",)
+
 PARLER_LANGUAGES = {
     None: (
         {'code': 'en'},
