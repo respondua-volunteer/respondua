@@ -7,6 +7,9 @@ class StaticStorage(S3Boto3Storage):
     default_acl = None
     file_overwrite = True
     querystring_auth = False
+    object_parameters = {
+        "CacheControl": "max-age=31536000, immutable"
+    }
 
 
 class MediaStorage(S3Boto3Storage):
@@ -14,3 +17,6 @@ class MediaStorage(S3Boto3Storage):
     default_acl = 'private'
     file_overwrite = False
     querystring_auth = True
+    object_parameters = {
+        "CacheControl": "max-age=300, must-revalidate"
+    }
