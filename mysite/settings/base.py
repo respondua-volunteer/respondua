@@ -23,7 +23,7 @@ else:
 # Stripe donation settings
 DONATION_MIN = 1      # минимальная сумма в валюте
 DONATION_MAX = None   # максимальная сумма
-DONATION_CURRENCY = "pln"
+DONATION_CURRENCY = "usd"
 
 SECRET_KEY = config("SECRET_KEY")
 DEBUG = config("DEBUG", default=False, cast=bool)

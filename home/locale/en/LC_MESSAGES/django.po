@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-13 14:03+0000\n"
+"POT-Creation-Date: 2025-08-17 14:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -80,7 +80,7 @@ msgstr "Team"
 
 #: home/templates/footer.html:37
 msgid "Усі права захищені."
-msgstr ""
+msgstr "All Rights Reserved"
 
 #: home/templates/index.html:8 home/templates/team.html:8
 #: home/templates/top_bar.html:35
@@ -447,8 +447,23 @@ msgstr "Andrew Shmeriga"
 msgid "Про Нас"
 msgstr "About us"
 
-#~ msgid "Vidguk, All Rights Reserved."
-#~ msgstr "Vidguk, All Rights Reserved."
+#: donations/templates/donations/receipt.html
+msgid "Дякуємо за ваш донат!"
+msgstr "Thank you for your donation!"
 
-#~ msgid "Зв'яжись з нами"
-#~ msgstr "Contact us"
+#: donations/templates/donations/receipt.html
+#, python-format
+msgid "Ми отримали %(amount)s %(currency)s."
+msgstr "We received %(amount)s %(currency)s."
+
+#: donations/templates/donations/receipt.html
+msgid "Номер транзакції"
+msgstr "Transaction ID"
+
+#: donations/templates/donations/receipt.html
+msgid "Цей лист надіслано з адреси, яка не приймає відповіді (no-reply)."
+msgstr "This email was sent from an address that does not accept replies (no-reply)."
+
+#: donations/templates/donations/receipt.html
+msgid "Питання?"
+msgstr "Questions?"

@@ -1,0 +1,49 @@
+{% load i18n %}
+<!doctype html>
+<html lang="{{ LANGUAGE_CODE|default:'uk' }}">
+  <head>
+    <meta charset="utf-8">
+    <meta name="color-scheme" content="light only">
+    <meta name="supported-color-schemes" content="light">
+  </head>
+  <body style="margin:0;padding:24px;background:#f6f7fb;font-family:Arial,Helvetica,Verdana,sans-serif;">
+    <!-- Preheader (скрытый текст для превью в инбоксе) -->
+    <div style="display:none;max-height:0;overflow:hidden;opacity:0;">
+      {% translate "Дякуємо! Ваш донат отримано." %}
+    </div>
+
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0"
+           style="max-width:640px;margin:0 auto;background:#ffffff;border-radius:12px">
+      <tr>
+        <td style="padding:28px 28px 8px 28px;">
+          <h2 style="margin:0 0 8px 0;color:#111;font-weight:700;">
+            {% translate "Дякуємо за ваш донат!" %}
+          </h2>
+
+          <p style="margin:0 0 12px 0;color:#333;">
+            {% blocktrans with amount=amount|floatformat:2 currency=currency %}
+              Ми отримали {{ amount }} {{ currency }}.
+            {% endblocktrans %}
+          </p>
+
+          {% if transaction_id %}
+            <p style="margin:0 0 16px 0;color:#333;">
+              <strong>{% translate "Номер транзакції" %}:</strong>
+              <span dir="ltr">{{ transaction_id }}</span>
+            </p>
+          {% endif %}
+
+          <p style="margin:12px 0 0 0;color:#777;font-size:13px;line-height:1.5;">
+            {% translate "Цей лист надіслано з адреси, яка не приймає відповіді (no-reply)." %}<br>
+            {% translate "Питання?" %}
+            {% with support_email=contact_email|default:DEFAULT_FROM_EMAIL %}
+              <a href="mailto:{{ support_email }}" style="color:#1a73e8;text-decoration:none;">
+                {{ support_email }}
+              </a>
+            {% endwith %}
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
