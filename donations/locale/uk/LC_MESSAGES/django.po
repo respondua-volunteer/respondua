@@ -1,0 +1,88 @@
+# Ukrainian translations for donations app
+msgid ""
+msgstr ""
+"Project-Id-Version: donations\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-08-16 00:00+0000\n"
+"PO-Revision-Date: 2025-08-16 00:00+0000\n"
+"Last-Translator: \n"
+"Language-Team: uk <you@example.com>\n"
+"Language: uk\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : (n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2));\n"
+
+#: donations/templates/donations/cancel.html:7
+msgid "Вiдгук — Платіж скасовано"
+msgstr "Вiдгук — Платіж скасовано"
+
+#: donations/templates/donations/cancel.html:33
+msgid "Платіж скасовано"
+msgstr "Платіж скасовано"
+
+#: donations/templates/donations/cancel.html:34
+msgid "Ви можете спробувати ще раз."
+msgstr "Ви можете спробувати ще раз."
+
+#: donations/templates/donations/cancel.html:38
+#: donations/templates/donations/success.html:44
+msgid "Повернутися на головну"
+msgstr "Повернутися на головну"
+
+#: donations/templates/donations/cancel.html:40
+msgid "Спробувати ще раз донат"
+msgstr "Спробувати ще раз донат"
+
+#: donations/templates/donations/success.html:7
+msgid "Вiдгук — Дякуємо!"
+msgstr "Вiдгук — Дякуємо!"
+
+#: donations/templates/donations/success.html:33
+msgid "Дякуємо!"
+msgstr "Дякуємо!"
+
+#: donations/templates/donations/success.html:35
+msgid "Оплата пройшла:"
+msgstr "Оплата пройшла:"
+
+#: donations/templates/donations/success.html:37
+msgid "Оплата пройшла успішно."
+msgstr "Оплата пройшла успішно."
+
+#: donations/templates/donations/success.html:45
+msgid "Зробити ще один донат"
+msgstr "Зробити ще один донат"
+
+#: donations/templates/donations/success.html:58
+msgid "Номер транзакції:"
+msgstr "Номер транзакції:"
+
+#: donations/templates/donations/success.html:63
+msgid "Лист-підтвердження буде надіслано на вашу пошту (якщо вказана)."
+msgstr "Лист-підтвердження буде надіслано на вашу пошту (якщо вказана)."
+
+#: donations/templates/donations/receipt.html:8
+msgid "Дякуємо! Ваш донат отримано."
+msgstr "Дякуємо! Ваш донат отримано."
+
+#: donations/templates/donations/receipt.html:13
+msgid "Дякуємо за ваш донат!"
+msgstr "Дякуємо за ваш донат!"
+
+#: donations/templates/donations/receipt.html:16
+#, python-format
+msgid "Ми отримали %(amount)s %(currency)s."
+msgstr "Ми отримали %(amount)s %(currency)s."
+
+#: donations/templates/donations/receipt.html:20
+msgid "Номер транзакції"
+msgstr "Номер транзакції"
+
+#: donations/templates/donations/receipt.html:26
+msgid "Цей лист надіслано з адреси, яка не приймає відповіді (no-reply)."
+msgstr "Цей лист надіслано з адреси, яка не приймає відповіді (no-reply)."
+
+#: donations/templates/donations/receipt.html:27
+msgid "Питання?"
+msgstr "Питання?"
