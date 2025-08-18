@@ -3,7 +3,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: donations\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-16 00:00+0000\n"
+"POT-Creation-Date: 2025-08-18 18:15+0000\n"
 "PO-Revision-Date: 2025-08-16 00:00+0000\n"
 "Last-Translator: \n"
 "Language-Team: en <you@example.com>\n"
@@ -17,72 +17,97 @@ msgstr ""
 msgid "Вiдгук — Платіж скасовано"
 msgstr "VIDGUK — Payment cancelled"
 
-#: donations/templates/donations/cancel.html:33
+#: donations/templates/donations/cancel.html:47
 msgid "Платіж скасовано"
 msgstr "Payment cancelled"
 
-#: donations/templates/donations/cancel.html:34
+#: donations/templates/donations/cancel.html:48
 msgid "Ви можете спробувати ще раз."
 msgstr "You can try again."
 
-#: donations/templates/donations/cancel.html:38
-#: donations/templates/donations/success.html:44
+#: donations/templates/donations/cancel.html:52
+#: donations/templates/donations/success.html:60
 msgid "Повернутися на головну"
 msgstr "Back to Home"
 
-#: donations/templates/donations/cancel.html:40
+#: donations/templates/donations/cancel.html:55
 msgid "Спробувати ще раз донат"
 msgstr "Try donation again"
+
+#: donations/templates/donations/receipt.html:12
+msgid "Дякуємо! Ваш донат отримано."
+msgstr "Thank you! Your donation has been received."
+
+#: donations/templates/donations/receipt.html:20
+msgid "Дякуємо за ваш донат!"
+msgstr "Thank you for your donation!"
+
+#: donations/templates/donations/receipt.html:24
+#, fuzzy, python-format
+#| msgid "Ми отримали %(amount)s %(currency)s."
+msgid ""
+"\n"
+"              Ми отримали %(amount)s %(currency)s.\n"
+"            "
+msgstr "We received %(amount)s %(currency)s."
+
+#: donations/templates/donations/receipt.html:31
+msgid "Номер транзакції"
+msgstr "Transaction ID"
+
+#: donations/templates/donations/receipt.html:37
+msgid "Цей лист надіслано з адреси, яка не приймає відповіді (no-reply)."
+msgstr ""
+"This email was sent from an address that does not accept replies (no-reply)."
+
+#: donations/templates/donations/receipt.html:38
+msgid "Питання?"
+msgstr "Questions?"
 
 #: donations/templates/donations/success.html:7
 msgid "Вiдгук — Дякуємо!"
 msgstr "VIDGUK — Thank you!"
 
-#: donations/templates/donations/success.html:33
+#: donations/templates/donations/success.html:52
 msgid "Дякуємо!"
 msgstr "Thank you!"
 
-#: donations/templates/donations/success.html:35
+#: donations/templates/donations/success.html:54
 msgid "Оплата пройшла:"
 msgstr "Payment processed:"
 
-#: donations/templates/donations/success.html:37
+#: donations/templates/donations/success.html:56
 msgid "Оплата пройшла успішно."
 msgstr "Payment succeeded."
 
-#: donations/templates/donations/success.html:45
+#: donations/templates/donations/success.html:61
 msgid "Зробити ще один донат"
 msgstr "Make another donation"
 
-#: donations/templates/donations/success.html:58
+#: donations/templates/donations/success.html:75
 msgid "Номер транзакції:"
 msgstr "Transaction ID:"
 
-#: donations/templates/donations/success.html:63
+#: donations/templates/donations/success.html:80
 msgid "Лист-підтвердження буде надіслано на вашу пошту (якщо вказана)."
 msgstr "A confirmation email will be sent to your email (if provided)."
 
-#: donations/templates/donations/receipt.html:8
-msgid "Дякуємо! Ваш донат отримано."
+#: donations/views.py:56
+#, fuzzy
+#| msgid "Дякуємо! Ваш донат отримано."
+msgid "Дякуємо! Оплату отримано"
 msgstr "Thank you! Your donation has been received."
 
-#: donations/templates/donations/receipt.html:13
-msgid "Дякуємо за ваш донат!"
-msgstr "Thank you for your donation!"
-
-#: donations/templates/donations/receipt.html:16
+#: donations/views.py:58
 #, python-format
-msgid "Ми отримали %(amount)s %(currency)s."
-msgstr "We received %(amount)s %(currency)s."
+msgid ""
+"Дякуємо, %(name)s!\n"
+"Ми отримали %(amount)s %(currency)s.\n"
+"Номер транзакції: %(tx)s\n"
+"\n"
+"Цей лист надіслано з адреси, яка не приймає відповіді. Питання: %(contact)s"
+msgstr ""
 
-#: donations/templates/donations/receipt.html:20
-msgid "Номер транзакції"
-msgstr "Transaction ID"
-
-#: donations/templates/donations/receipt.html:26
-msgid "Цей лист надіслано з адреси, яка не приймає відповіді (no-reply)."
-msgstr "This email was sent from an address that does not accept replies (no-reply)."
-
-#: donations/templates/donations/receipt.html:27
-msgid "Питання?"
-msgstr "Questions?"
+#: donations/views.py:63
+msgid "друже"
+msgstr ""
