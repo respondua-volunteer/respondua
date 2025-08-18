@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-17 14:30+0000\n"
+"POT-Creation-Date: 2025-08-18 18:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -66,7 +66,7 @@ msgstr ""
 msgid "Хто ми?"
 msgstr ""
 
-#: home/templates/footer.html:26 home/templates/index.html:664
+#: home/templates/footer.html:26 home/templates/index.html:650
 #: home/templates/top_bar.html:46
 msgid "Блог"
 msgstr ""
@@ -84,308 +84,345 @@ msgstr ""
 msgid "Вiдгук"
 msgstr ""
 
-#: home/templates/index.html:50
+#: home/templates/index.html:49
 msgid "Будьмо добрими до дітей"
 msgstr ""
 
-#: home/templates/index.html:52
+#: home/templates/index.html:51
 msgid "Ми віримо, що кожен має право на щасливе та безпечне дитинство."
 msgstr ""
 
-#: home/templates/index.html:53
+#: home/templates/index.html:52
 msgid ""
 "Ваша підтримка дозволяє нам створювати можливості для дітей розвиватися, "
 "навчатися та оточувати їх турботою та ласкою"
 msgstr ""
 
-#: home/templates/index.html:56 home/templates/index.html:73
-#: home/templates/index.html:89 home/templates/index.html:401
+#: home/templates/index.html:55 home/templates/index.html:72
+#: home/templates/index.html:88 home/templates/index.html:418
 msgid "Допомогти"
 msgstr ""
 
-#: home/templates/index.html:66
+#: home/templates/index.html:65
 msgid "Долучіться, протягнувши руку допомоги"
 msgstr ""
 
-#: home/templates/index.html:68
+#: home/templates/index.html:67
 msgid ""
 "Звітайтесь до нашої спільноти і станьте частиною нашого благодійного "
 "зусилля, простягаючи руку допомоги."
 msgstr ""
 
-#: home/templates/index.html:69
+#: home/templates/index.html:68
 msgid "Разом ми можемо зробити більше для тих, хто потребує нашої допомоги."
 msgstr ""
 
-#: home/templates/index.html:70
+#: home/templates/index.html:69
 msgid "Приєднуйтесь до нас і долучайтеся до добрих справ"
 msgstr ""
 
-#: home/templates/index.html:83
+#: home/templates/index.html:82
 msgid "Дарувати надiю мільйонам"
 msgstr ""
 
-#: home/templates/index.html:85
+#: home/templates/index.html:84
 msgid ""
 "Важливо пам'ятати, що ми можемо змінити світ, починаючи з невеликих дій, і "
 "це може мати величезний вплив на життя мільйонів людей."
 msgstr ""
 
-#: home/templates/index.html:86
+#: home/templates/index.html:85
 msgid ""
 "Нехай цей лозунг надихне нас усіх дарувати надію та робити світ кращим для "
 "інших."
 msgstr ""
 
-#: home/templates/index.html:127
+#: home/templates/index.html:125
 msgid "Трохи про нас"
 msgstr ""
 
-#: home/templates/index.html:128
+#: home/templates/index.html:126
 msgid "Що таке Відгук?"
 msgstr ""
 
-#: home/templates/index.html:133
+#: home/templates/index.html:131
 msgid "О нас"
 msgstr ""
 
-#: home/templates/index.html:136
+#: home/templates/index.html:134
 msgid "Місія"
 msgstr ""
 
-#: home/templates/index.html:139
+#: home/templates/index.html:137
 msgid "Наші цінності"
 msgstr ""
 
-#: home/templates/index.html:145
+#: home/templates/index.html:143
 msgid ""
-"Відгук - це благодійний фонд створенний українцями, який відгукується на "
-"прохання людей."
+"Благодійний фонд «Відгук» — це відповідь на потребу людей. Ми — команда "
+"українців, яких з’єднало бажання допомагати ближньому після 24 лютого 2022 "
+"року"
 msgstr ""
 
-#: home/templates/index.html:146
+#: home/templates/index.html:144
 msgid ""
-"Це люди, яких з 24 лютого 2022 року об'єднало однє бажання і один поклик - "
-"допомога ближньому, тому хто у біді."
+"Все почалося в Одесі з простої, але важливої справи — роздачі гуманітарної "
+"допомоги тим, хто втратив дім чи опинився у скруті. Ми чуємо, бачимо і діємо "
+"— саме так народився наш фонд."
+msgstr ""
+
+#: home/templates/index.html:147
+msgid "Ми прагнемо бути поруч. Відгукуватися на прохання, відчувати і чути. "
+msgstr ""
+
+#: home/templates/index.html:148
+msgid ""
+"Ми хочемо, щоб кожна людина, з якою ми перетинаємось, відчула: її біль — не "
+"байдужий, її історія — важлива. Наша місія не просто допомогти, а бути "
+"уважними до людини."
 msgstr ""
 
 #: home/templates/index.html:151
-msgid "Наша місія бути відкритими до людей, відчувати та чути їх."
+msgid "Ми будуємо нашу роботу на довірі та стосунках."
 msgstr ""
 
 #: home/templates/index.html:152
-msgid "Бачити тих, хто потребує допомогу."
-msgstr ""
-
-#: home/templates/index.html:155
-msgid "Однією нашою головною цінністю є - взаємовідносини та довіра."
-msgstr ""
-
-#: home/templates/index.html:156
 msgid ""
-"Для нас важлива кожна людина, якій ми допомогаємо і ми хочемо, щоб вона "
-"відчувала надійність поруч з нами."
+"Щирість, чесність і стабільна присутність поруч — основа всього, що ми "
+"робимо."
 msgstr ""
 
-#: home/templates/index.html:157
+#: home/templates/index.html:153
 msgid ""
-"Довіра в співпраці— без якої неможлива наша діяльність. Щирість та чесність "
-"допомагають творити нам добро."
+"Ми віримо, що лише в партнерстві, де є взаємоповага, можливе справжнє "
+"служіння."
 msgstr ""
 
-#: home/templates/index.html:172
-msgid "Що ми робимо?"
+#: home/templates/index.html:167
+msgid "Наші проєкти"
 msgstr ""
 
-#: home/templates/index.html:173
+#: home/templates/index.html:168
 msgid "З вами зможемо врятувати більше життів"
 msgstr ""
 
-#: home/templates/index.html:182
-msgid "Продуктова допомога"
+#: home/templates/index.html:179
+msgid "Гуманітарна допомога в Одесі"
 msgstr ""
 
-#: home/templates/index.html:184
-msgid "Надаємо допомогу продуктовими наборами в Одесi та Херсонській обл."
+#: home/templates/index.html:181
+msgid ""
+"Ми щомісяця підтримуємо близько 200 родин в Одесі, які опинилися у складних "
+"життєвих обставинах. Пакунки з продуктами — це базова, але надзвичайно "
+"важлива допомога для багатьох людей."
 msgstr ""
 
-#: home/templates/index.html:197
+#: home/templates/index.html:194
+msgid "Гуманітарна допомога в Миколаївській, Херсонській та Одеській областях"
+msgstr ""
+
+#: home/templates/index.html:196
+msgid ""
+"Кожні 6 тижнів ми виїжджаємо з гуманітарною допомогою в Херсонську, "
+"Миколаївську та Одеську області. Допомогу отримують від 100 до 200 родин — "
+"часто це люди з віддалених сіл, які залишилися без підтримки."
+msgstr ""
+
+#: home/templates/index.html:210
 msgid "Відбудова"
 msgstr ""
 
-#: home/templates/index.html:198
-msgid "Відбудовуємо зруйновані доми у де-окупованих селах"
+#: home/templates/index.html:212
+msgid ""
+"Відновлення житла — це відновлення життя. Ми підтримуємо родини у процесі "
+"відбудови: закуповуємо матеріали, долучаємо волонтерів, допомагаємо крок за "
+"кроком повертати дім. 15 сімей тепер можуть жити в своїх домах."
 msgstr ""
 
-#: home/templates/index.html:213
-msgid "Тепло у будинку"
-msgstr ""
-
-#: home/templates/index.html:214
-msgid "Дрова для де-окупованих сіл на зимовий період"
+#: home/templates/index.html:225
+msgid "Програми для дітей"
 msgstr ""
 
 #: home/templates/index.html:227
-msgid "Літні табори"
-msgstr ""
-
-#: home/templates/index.html:228
-msgid "Табори для пiдлiткiв<br> Незабутній час до якого хочеться повернутися"
-msgstr ""
-
-#: home/templates/index.html:239
-msgid "Поїздки до дітей"
+msgid ""
+"Наші дитячі програми — це поєднання творчості, ігор та підтримки. Ми "
+"працюємо з дітьми, які пережили травми, допомагаємо їм знову відчувати себе "
+"дітьми — у грі, спілкуванні та безпеці. Проводимо програми в Херсонській, "
+"Миколаївській та Одеській областях. Кожна дитина отримує подарунок, а у "
+"вересні — шкільну канцелярію. Таку підтримку отримують близько 200 дітей."
 msgstr ""
 
 #: home/templates/index.html:240
-msgid "Поїздки до дітей та підлітків у села Херсонскої та Миколаївської обл."
+msgid "Допомога ветеранам"
 msgstr ""
 
-#: home/templates/index.html:250
-msgid "Соціальна пiдтримка"
+#: home/templates/index.html:242
+msgid ""
+"Ми організовуємо зустрічі для ветеранів, де музика і розмова стають "
+"простором відновлення. Уже проведено дві музичні зустрічі, а також "
+"щокварталу надаємо гуманітарну допомогу 30 сім’ям ветеранів."
 msgstr ""
 
-#: home/templates/index.html:251
-msgid "Допомога людям з інвалідністю, багатодітним сім' ям та переселенцям"
+#: home/templates/index.html:255
+msgid "Арт- простір"
+msgstr ""
+
+#: home/templates/index.html:257
+msgid ""
+"Щовівторка ми відкриваємо двері для жінок, які були змушені покинути свій "
+"дім. Вони приходять відпочити, побути почутими й знайти в собі нову силу та "
+"спокій через творчість."
 msgstr ""
 
 #: home/templates/index.html:270
+msgid "Зимний сезон"
+msgstr ""
+
+#: home/templates/index.html:272
+msgid ""
+"Для багатьох сімей зима — це виклик, особливо без світла й тепла. Починаючи "
+"з жовтня, ми забезпечуємо дровами, брикетами та приладами обігріву понад 150 "
+"родин у Херсонській і Миколаївській областях — там, де немає опалення, це "
+"життєво необхідно."
+msgstr ""
+
+#: home/templates/index.html:292
 msgid "Села"
 msgstr ""
 
-#: home/templates/index.html:279
+#: home/templates/index.html:301
 msgid "Сім'ї"
 msgstr ""
 
-#: home/templates/index.html:288
+#: home/templates/index.html:310
 msgid "Продуктових наборів"
 msgstr ""
 
-#: home/templates/index.html:297
+#: home/templates/index.html:319
 msgid "Поїздок"
 msgstr ""
 
-#: home/templates/index.html:310
+#: home/templates/index.html:332
 msgid "Майбутні події"
 msgstr ""
 
-#: home/templates/index.html:311
+#: home/templates/index.html:333
 msgid "Будьте готові до наших майбутніх благодійних iвентiв"
 msgstr ""
 
-#: home/templates/index.html:349
+#: home/templates/index.html:369
 msgid "Допомогти зараз"
 msgstr ""
 
-#: home/templates/index.html:350
+#: home/templates/index.html:370
 msgid "Населенню України потрібна ваша допомога"
 msgstr ""
 
-#: home/templates/index.html:354
+#: home/templates/index.html:374
 msgid "Зробити добро і допомогти тим, хто цього потребує, завжди важливо."
 msgstr ""
 
-#: home/templates/index.html:355
+#: home/templates/index.html:375
 msgid ""
 "Ваші донати допомагають нам розширювати нашу діяльність та надавати допомогу "
 "у надзвичайних ситуаціях."
 msgstr ""
 
-#: home/templates/index.html:356
+#: home/templates/index.html:376
 msgid ""
 "Вони також дозволяють нам запускати нові проекти та підвищувати свідомість "
 "про важливі питання."
 msgstr ""
 
-#: home/templates/index.html:357
+#: home/templates/index.html:377
 msgid "Приєднавшись до нас, ми зробимо набагато більше"
 msgstr ""
 
-#: home/templates/index.html:372
+#: home/templates/index.html:391
 msgid "Iм'я"
 msgstr ""
 
-#: home/templates/index.html:390
+#: home/templates/index.html:408
 msgid "Інша сума"
 msgstr ""
 
-#: home/templates/index.html:396
+#: home/templates/index.html:413
 msgid "Сума (напр. 20.00)"
 msgstr ""
 
-#: home/templates/index.html:509
+#: home/templates/index.html:504
 msgid "Наша команда"
 msgstr ""
 
-#: home/templates/index.html:510
+#: home/templates/index.html:505
 msgid "Люди якi стоять за нашою благодійною діяльністю"
 msgstr ""
 
-#: home/templates/index.html:519 home/templates/team.html:65
+#: home/templates/index.html:514 home/templates/team.html:65
 msgid "Олександр Мойсеєнко"
 msgstr ""
 
-#: home/templates/index.html:536 home/templates/team.html:82
+#: home/templates/index.html:531 home/templates/team.html:82
 msgid "Олександр Сапего"
 msgstr ""
 
-#: home/templates/index.html:553 home/templates/team.html:99
+#: home/templates/index.html:548 home/templates/team.html:99
 msgid "Валерія Грицик"
 msgstr ""
 
-#: home/templates/index.html:570 home/templates/team.html:116
+#: home/templates/index.html:565 home/templates/team.html:116
 msgid "Денис Ткачук"
 msgstr ""
 
-#: home/templates/index.html:593
+#: home/templates/index.html:586
 msgid "Подяки людей"
 msgstr ""
 
-#: home/templates/index.html:594
+#: home/templates/index.html:587
 msgid "Що люди говорять про нас"
 msgstr ""
 
-#: home/templates/index.html:601
+#: home/templates/index.html:594
 msgid "Катя"
 msgstr ""
 
-#: home/templates/index.html:607
+#: home/templates/index.html:599
 msgid "Щиро дякую за допомогу, яку ви нам надаєте в цей час"
 msgstr ""
 
-#: home/templates/index.html:615
+#: home/templates/index.html:606
 msgid "Ольга"
 msgstr ""
 
-#: home/templates/index.html:621
+#: home/templates/index.html:611
 msgid ""
 "Велика вдячність, що нам здійснюють гуманітарну допомогу, у цей момент вона "
 "дуже нам потрібна"
 msgstr ""
 
-#: home/templates/index.html:629
+#: home/templates/index.html:618
 msgid "Раїса"
 msgstr ""
 
-#: home/templates/index.html:635
+#: home/templates/index.html:623
 msgid ""
 "Дякую благодійному фонду « Відгук», що у таку важку хвилину під час війни ви "
 "нам допомагаєте і підтримуєте"
 msgstr ""
 
-#: home/templates/index.html:643
+#: home/templates/index.html:630
 msgid "Ігор"
 msgstr ""
 
-#: home/templates/index.html:649
+#: home/templates/index.html:636
 msgid "Отримали допомогу, дуже дякуємо."
 msgstr ""
 
-#: home/templates/index.html:650
+#: home/templates/index.html:637
 msgid "Я з Херсону.Слава Україні"
 msgstr ""
 
-#: home/templates/index.html:665
+#: home/templates/index.html:651
 msgid "Останні новини та статті"
 msgstr ""
 
