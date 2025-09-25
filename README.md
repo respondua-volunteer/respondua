@@ -98,3 +98,14 @@ python manage.py compilemessages \
   -i "venv/*" -i ".venv/*" -i "env/*" \
   -i "node_modules/*" -i "static/*" \
   -i "*/site-packages/*" -i "build/*" -i "dist/*"
+
+docker exec -it volunteer python manage.py compilemessages \
+  -i "venv/*" -i ".venv/*" -i "env/*" \
+  -i "node_modules/*" -i "static/*" \
+  -i "*/site-packages/*" -i "build/*" -i "dist/*"
+
+docker exec -it volunteer python manage.py makemessages \
+  -l en -l uk \
+  -i "venv/*" -i ".venv/*" -i "env/*" \
+  -i "node_modules/*" -i "static/*" \
+  -i "*/site-packages/*" -i "build/*" -i "dist/*"
