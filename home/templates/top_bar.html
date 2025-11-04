@@ -32,11 +32,15 @@
 <!-- Nav Bar Start -->
 <div class="navbar navbar-expand-lg bg-dark navbar-dark">
     <div class="container-fluid">
-        <a href="/" class="navbar-brand">{% translate "Вiдгук" %}</a>
+        <div class="navbar-brand-container">
+            <a href="/" class="navbar-brand">
+                VIDGUK
+                <img class="logo_icon white_logo" src="{% static 'logo/white_logo.svg' %}" alt="">
+            </a>
+        </div>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="icon"><img class="logo_icon white_logo" src="{% static 'logo/white_logo.svg' %}" alt=""></div>
 
         <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
             <div class="navbar-nav ml-auto">

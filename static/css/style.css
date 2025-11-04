@@ -3,9 +3,9 @@
 /*******************************/
 body {
     color: #777777;
-    font-weight: 500;
+    font-weight: 400;
     background: #ffffff;
-    font-family: 'Balsamiq Sans';
+    font-family: 'Geist', sans-serif;
 }
 
 h1,
@@ -15,6 +15,7 @@ h4,
 h5, 
 h6 {
     color: #4a4c70;
+    font-family: 'Arvo', serif;
 }
 
 a {
@@ -66,9 +67,10 @@ a:focus {
 }
 
 .logo_icon.white_logo {
-    width: 350px;
+    width: 200px;
     height: auto;
-    margin-left: 30px;
+    margin: 0;
+    display: inline-block;
 }
 
 
@@ -245,6 +247,7 @@ a:focus {
     position: relative;
     transition: .5s;
     z-index: 999;
+    padding: 15px 0;
 }
 
 .navbar.nav-sticky {
@@ -259,10 +262,25 @@ a:focus {
     margin: 0;
     color: #ffffff;
     font-size: 45px;
-    line-height: 0px;
+    line-height: 45px;
     font-weight: 700;
     letter-spacing: 5px;
     text-transform: uppercase;
+    font-family: 'Arvo', serif;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.navbar-brand-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0 auto;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .navbar .navbar-brand img {

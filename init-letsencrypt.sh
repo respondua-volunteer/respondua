@@ -1,19 +1,24 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if ! command -v docker-compose >/dev/null 2>&1; then
-  echo 'Error: docker-compose is not installed.' >&2
+# --- выбрать доступную команду compose ---
+if command -v docker compose >/dev/null 2>&1; then
+  COMPOSE="docker compose"
+elif command -v docker-compose >/dev/null 2>&1; then
+  COMPOSE="docker-compose"
+else
+  echo 'Error: docker compose / docker-compose is not installed.' >&2
   exit 1
 fi
 
-# >>> УКАЖИ НУЖНЫЕ ДОМЕНЫ <<<
+# --- УКАЖИ НУЖНЫЕ ДОМЕНЫ ---
 # Для dev только: domains=(dev.respondua.org)
 # Для prod+dev:  domains=(respondua.org dev.respondua.org)
-domains=(dev.respondua.org)
+domains=(dev.respondua.org respondua.org)
 
 rsa_key_size=4096
 data_path="./docker/nginx/certbot"
-email="volunteervolunteer245@gmail.com"   # замени при желании
+email="volunteervolunteer245@gmail.com"   # при желании поменяй
 staging=0                                  # 1 — тестовый режим (не трать лимит LE)
 
 # Предупреждение при наличии старых данных
@@ -38,7 +43,7 @@ echo "### Creating dummy certificates ..."
 for domain in "${domains[@]}"; do
   live_path="/etc/letsencrypt/live/$domain"
   mkdir -p "$data_path/conf/live/$domain"
-  docker-compose run --rm --entrypoint "\
+  $COMPOSE run --rm --entrypoint "\
     openssl req -x509 -nodes -newkey rsa:1024 -days 1 \
       -keyout '$live_path/privkey.pem' \
       -out '$live_path/fullchain.pem' \
@@ -47,16 +52,22 @@ done
 echo
 
 echo "### Starting nginx ..."
-docker-compose up --force-recreate -d nginx
+$COMPOSE up --force-recreate -d nginx
 echo
 
-# Удаляем dummy и запрашиваем реальные сертификаты по каждому домену
+# Удаляем dummy и выпускаем реальные сертификаты (без -0001)
 for domain in "${domains[@]}"; do
-  echo "### Deleting dummy certificate for $domain ..."
-  docker-compose run --rm --entrypoint "\
-    rm -Rf /etc/letsencrypt/live/$domain && \
-    rm -Rf /etc/letsencrypt/archive/$domain && \
-    rm -Rf /etc/letsencrypt/renewal/$domain.conf" certbot
+  echo "### Cleaning previous cert line for $domain (if any) ..."
+  # 1) мягко удалить «линию» сертификата, если существует
+  $COMPOSE run --rm --entrypoint "\
+    sh -c '
+      if [ -f /etc/letsencrypt/renewal/$domain.conf ]; then
+        certbot delete --non-interactive --cert-name $domain || true
+      fi
+      rm -rf /etc/letsencrypt/live/$domain \
+             /etc/letsencrypt/archive/$domain \
+             /etc/letsencrypt/renewal/$domain.conf || true
+    '" certbot
   echo
 
   echo "### Requesting Let's Encrypt certificate for $domain ..."
@@ -65,17 +76,22 @@ for domain in "${domains[@]}"; do
   # staging arg
   if [ "$staging" != "0" ]; then staging_arg="--staging"; else staging_arg=""; fi
 
-  docker-compose run --rm --entrypoint "\
+  # Важно: фиксируем имя линии --cert-name "$domain"
+  $COMPOSE run --rm --entrypoint "\
     certbot certonly --webroot -w /var/www/certbot \
       $staging_arg \
       $email_arg \
-      -d $domain \
+      --cert-name '$domain' \
+      -d '$domain' \
       --rsa-key-size $rsa_key_size \
       --agree-tos \
-      --force-renewal" certbot
+      --force-renewal \
+      --no-eff-email" certbot
   echo
 done
 
 echo "### Reloading nginx ..."
-docker-compose exec nginx nginx -s reload
+# -T чтобы не ждать stdin в non-interactive окружении
+$COMPOSE exec -T nginx nginx -t
+$COMPOSE exec -T nginx nginx -s reload
 echo "Done."
