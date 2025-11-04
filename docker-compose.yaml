@@ -25,7 +25,7 @@ services:
       - ./docker/nginx/certbot/www:/var/www/certbot
     entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
   volunteer:
-    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.1.3
+    image: 420779746987.dkr.ecr.eu-central-1.amazonaws.com/volunteer:v1.1.4
     container_name: volunteer
     restart: unless-stopped
     env_file: .env
