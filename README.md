@@ -109,3 +109,7 @@ docker exec -it volunteer python manage.py makemessages \
   -i "venv/*" -i ".venv/*" -i "env/*" \
   -i "node_modules/*" -i "static/*" \
   -i "*/site-packages/*" -i "build/*" -i "dist/*"
+
+stripe login
+
+stripe listen --forward-to http://127.0.0.1:8000/stripe/webhook/

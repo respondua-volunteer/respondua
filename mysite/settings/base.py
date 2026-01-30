@@ -124,10 +124,16 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Respond API',
-    'DESCRIPTION': 'API documentation for Respond project',
+    'DESCRIPTION': 'API documentation for Respond project - a charitable foundation management system',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'SCHEMA_PATH_PREFIX_TRIM': True,
+    'SCHEMA_PATH_PREFIX': '/api/',
+    'COMPONENT_SPLIT_REQUEST': True,
+    'COMPONENT_NO_READ_ONLY_REQUIRED': True,
+    # Использовать наш YAML файл вместо автогенерации
+    'SCHEMA_PATH_PREFIX': None,
+    'SCHEMA_PATH_PREFIX_TRIM': False,
 }
 
 MIDDLEWARE = [

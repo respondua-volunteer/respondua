@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
+from drf_spectacular.views import SpectacularSwaggerView, SpectacularRedocView
 from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import set_language
 
 from donations.views import stripe_webhook  # <-- import view
+from .api_views import openapi_schema  # <-- import custom schema view
 
 urlpatterns = [
     path("i18n/setlang/", set_language, name="set_language"),
@@ -19,7 +20,7 @@ urlpatterns += i18n_patterns(
     path("", include("donations.urls")),
     path("", include("blog.urls")),
     path("", include("django_prometheus.urls")),
-    path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
+    path("api/schema/", openapi_schema, name="schema"),
     path("api/docs/swagger/", SpectacularSwaggerView.as_view(url_name="schema"), name="swagger-ui"),
     path("api/docs/redoc/", SpectacularRedocView.as_view(url_name="schema"), name="redoc"),
 )
