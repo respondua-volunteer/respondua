@@ -1,0 +1,86 @@
+---
+- name: Configure additional IP address (netplan, declarative)
+  hosts: masters
+  become: true
+  gather_facts: false
+
+  vars:
+    netplan_file: /etc/netplan/50-cloud-init.yaml
+    iface: eth0
+    extra_ipv4: "144.91.92.50/24"
+
+  tasks:
+    - name: Read current netplan config
+      slurp:
+        src: "{{ netplan_file }}"
+      register: netplan_current
+
+    - name: Parse netplan YAML
+      set_fact:
+        netplan_obj: "{{ netplan_current.content | b64decode | from_yaml }}"
+
+    - name: Ensure addresses list exists
+      set_fact:
+        netplan_obj: >-
+          {{
+            netplan_obj
+            | combine(
+                {
+                  'network': {
+                    'ethernets': {
+                      iface: {
+                        'addresses': (
+                          (netplan_obj.network.ethernets[iface].addresses | default([]))
+                        )
+                      }
+                    }
+                  }
+                },
+                recursive=True
+              )
+          }}
+
+    - name: Add extra IP if missing (in-memory)
+      set_fact:
+        netplan_obj: >-
+          {{
+            netplan_obj
+            | combine(
+                {
+                  'network': {
+                    'ethernets': {
+                      iface: {
+                        'addresses': (
+                          (netplan_obj.network.ethernets[iface].addresses | default([]))
+                          + ([extra_ipv4] if extra_ipv4 not in (netplan_obj.network.ethernets[iface].addresses | default([])) else [])
+                        )
+                      }
+                    }
+                  }
+                },
+                recursive=True
+              )
+          }}
+
+    - name: Render netplan YAML back to file
+      copy:
+        dest: "{{ netplan_file }}"
+        content: "{{ netplan_obj | to_nice_yaml(indent=2) }}"
+        owner: root
+        group: root
+        mode: "0644"
+        backup: true
+      register: netplan_written
+
+    - name: Apply netplan configuration (only if changed)
+      command: netplan apply
+      when: netplan_written.changed
+
+    - name: Verify IP is configured
+      command: "ip -4 addr show {{ iface }}"
+      register: ip_output
+      changed_when: false
+
+    - name: Show interface configuration
+      debug:
+        var: ip_output.stdout_lines

@@ -1,0 +1,63 @@
+---
+- name: Install and manage K3s master node
+  hosts: masters
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Update apt cache (Debian/Ubuntu)
+      apt:
+        update_cache: true
+        cache_valid_time: 3600
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install required packages
+      package:
+        name:
+          - curl
+          - iptables
+        state: present
+
+  roles:
+    - ../roles/k3s
+
+  post_tasks:
+    - name: Get node status
+      command: kubectl get nodes
+      environment:
+        KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+      register: node_status
+      changed_when: false
+
+    - name: Display node status
+      debug:
+        var: node_status.stdout_lines
+
+    - name: Ensure local kubeconfig directory exists
+      delegate_to: localhost
+      become: false
+      file:
+        path: "{{ (kubeconfig_local_path | expanduser) | dirname }}"
+        state: directory
+        mode: "0700"
+      when: kubeconfig_local_path is defined
+
+    - name: Fetch kubeconfig to local machine
+      fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: "{{ kubeconfig_local_path | expanduser }}"
+        flat: true
+      when:
+        - kubeconfig_local_path is defined
+        - not ansible_check_mode
+
+    - name: Update server address in local kubeconfig
+      delegate_to: localhost
+      become: false
+      replace:
+        path: "{{ kubeconfig_local_path | expanduser }}"
+        regexp: 'https://127\\.0\\.0\\.1:6443'
+        replace: "https://{{ ansible_host }}:6443"
+      when:
+        - kubeconfig_local_path is defined
+        - not ansible_check_mode

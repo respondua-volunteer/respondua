@@ -1,0 +1,34 @@
+---
+# K3s version configuration
+k3s_version: v1.35.0+k3s1
+
+# Upgrade settings
+k3s_do_drain: false  # For single-node, typically false
+k3s_snapshot_before_upgrade: true
+k3s_snapshot_retention: 5
+
+# Cluster initialization (separate from server config)
+k3s_cluster_init: true
+
+# K3s installation settings
+k3s_server_config:
+  cluster-cidr: "10.42.0.0/16"
+  service-cidr: "10.43.0.0/16"
+  write-kubeconfig-mode: "0644"
+  etcd-snapshot-schedule-cron: "0 */12 * * *"
+  etcd-snapshot-retention: 5
+  # Lists
+  tls-san:
+    - "144.91.92.50"
+    - "167.86.121.19"
+  disable:
+    - "traefik"
+    - "servicelb"
+
+# System requirements
+required_kernel_modules:
+  - br_netfilter
+  - overlay
+
+# Kubeconfig settings
+kubeconfig_local_path: "~/.kube/k3s-config"
