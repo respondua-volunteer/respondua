@@ -218,61 +218,93 @@ spec:
 #   syncPolicy:
 #     syncOptions:
 #     - CreateNamespace=true
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: postgresql
-#   namespace: argo-cd
-#   labels:
-#     app.kubernetes.io/component: database
-#     app.kubernetes.io/part-of: mcp-incident-analyst
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/postgresql
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: postgresql
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-# ---
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgresql
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: database
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/postgresql
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgresql
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+---
 
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: redis
-#   namespace: argo-cd
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/redis
-#     helm:
-#       valueFiles:
-#         - values-dev.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: redis
+  namespace: argo-cd
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/redis
+    helm:
+      valueFiles:
+        - values-dev.yaml
   
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: redis
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: redis
   
-#   syncPolicy:
-#     # automated:
-#     #   prune: true
-#     #   selfHeal: true
-#     #   allowEmpty: false
-#     syncOptions:
-#       - CreateNamespace=true
-#     retry:
-#       limit: 5
-#       backoff:
-#         duration: 5s
-#         factor: 2
-#         maxDuration: 3m
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    #   allowEmpty: false
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+
+---
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: respondua
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: application
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: services
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/respondua
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: respondua
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
 
 # ---
