@@ -135,7 +135,7 @@ trafficManagement:
       
       # Grafana с настройками для dashboard queries
       - name: grafana
-        namespace: observability
+        namespace: monitoring
         host: grafana
         trafficPolicy:
           loadBalancer:
