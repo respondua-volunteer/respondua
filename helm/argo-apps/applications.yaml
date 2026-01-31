@@ -307,4 +307,38 @@ spec:
         factor: 2
         maxDuration: 3m
 
-# ---
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metrics-server
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/metrics-server
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+      allowEmpty: false
+    syncOptions:
+    - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m
+  revisionHistoryLimit: 3
