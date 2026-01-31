@@ -59,7 +59,7 @@ gateway:
       protocol: TCP
       targetPort: 443
     annotations:
-      metallb.universe.tf/loadBalancerIPs: 217.76.51.118
+      metallb.universe.tf/loadBalancerIPs: 167.86.121.19
     loadBalancerIP: ""
     loadBalancerSourceRanges: []
     externalTrafficPolicy: Local
