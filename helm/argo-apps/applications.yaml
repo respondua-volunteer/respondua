@@ -175,28 +175,28 @@ spec:
     automated:
       prune: true
       selfHeal: true
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: istio-config
-#   namespace: argo-cd
-#   labels:
-#     app.kubernetes.io/component: infrastructure
-#     app.kubernetes.io/part-of: mcp-incident-analyst
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/istio-config
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: gateway
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-config
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/istio-config
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gateway
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: Application
