@@ -31,4 +31,4 @@ required_kernel_modules:
   - overlay
 
 # Kubeconfig settings
-kubeconfig_local_path: "~/.kube/k3s-config"
+kubeconfig_local_path: "~/.kube/respondua"
