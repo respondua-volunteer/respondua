@@ -141,6 +141,9 @@ livenessProbe:
   httpGet:
     path: /
     port: 8000
+    httpHeaders:
+      - name: Host
+        value: respondua.org
   initialDelaySeconds: 120
   periodSeconds: 10
   timeoutSeconds: 5
@@ -149,6 +152,9 @@ readinessProbe:
   httpGet:
     path: /
     port: 8000
+    httpHeaders:
+      - name: Host
+        value: respondua.org
   initialDelaySeconds: 30
   periodSeconds: 5
   timeoutSeconds: 3
