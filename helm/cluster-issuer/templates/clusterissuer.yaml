@@ -16,7 +16,14 @@ spec:
 
     solvers:
       - dns01:
-          cloudflare:
-            apiTokenSecretRef:
-              name: {{ .Values.cloudflare.apiTokenSecretRef.name }}
-              key: {{ .Values.cloudflare.apiTokenSecretRef.key }}
+          route53:
+            region: {{ .Values.route53.region }}
+            {{- if .Values.route53.hostedZoneID }}
+            hostedZoneID: {{ .Values.route53.hostedZoneID }}
+            {{- end }}
+            accessKeyIDSecretRef:
+              name: {{ .Values.route53.accessKeyIDSecretRef.name }}
+              key: {{ .Values.route53.accessKeyIDSecretRef.key }}
+            secretAccessKeySecretRef:
+              name: {{ .Values.route53.secretAccessKeySecretRef.name }}
+              key: {{ .Values.route53.secretAccessKeySecretRef.key }}

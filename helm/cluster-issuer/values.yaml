@@ -4,14 +4,20 @@ namespace: cert-manager
 # ClusterIssuer configuration
 clusterIssuer:
   name: letsencrypt-prod
-  certEmail: dserbeniukgood@gmail.com
+  certEmail: volunteervolunteer245@gmail.com
   
   # Staging configuration
   staging:
     enabled: false
 
-# Cloudflare configuration
-cloudflare:
-  apiTokenSecretRef:
-    name: cloudflare-api-token
-    key: api-token
+# AWS Route 53 configuration
+route53:
+  region: us-east-1  # Change to your AWS region
+  hostedZoneID: ""  # Your Route 53 Hosted Zone ID
+  accessKeyIDSecretRef:
+    name: route53-credentials
+    key: access-key-id
+  secretAccessKeySecretRef:
+    name: route53-credentials
+    key: secret-access-key
+
