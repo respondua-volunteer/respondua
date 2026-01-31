@@ -5,10 +5,16 @@ from django.conf.urls.static import static
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import set_language
+from django.http import HttpResponse
 
 from donations.views import stripe_webhook  # <-- import view
 
+def health_check(request):
+    """Health check endpoint for Kubernetes probes"""
+    return HttpResponse("OK", status=200, content_type="text/plain")
+
 urlpatterns = [
+    path("health/", health_check, name="health"),
     path("i18n/setlang/", set_language, name="set_language"),
     path("stripe/webhook/", stripe_webhook, name="stripe_webhook"),  # <-- OUTSIDE i18n
 ]

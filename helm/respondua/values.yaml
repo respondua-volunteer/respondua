@@ -11,7 +11,7 @@ image:
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1.1.4"
+  tag: "v1.1.5"
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets:
@@ -90,6 +90,14 @@ envFrom:
   - secretRef:
       name: respondua-secrets  # POSTGRES_PASSWORD, SECRET_KEY, AWS credentials
 
+# Migration job configuration (manual trigger only)
+migrations:
+  enabled: false  # Set to true when you want to run migrations
+
+# Collectstatic job configuration (manual trigger only)
+collectstatic:
+  enabled: false  # Set to true when you want to collect static files to S3
+
 # -- Expose the service via gateway-api HTTPRoute
 # Requires Gateway API resources and suitable controller installed within the cluster
 # (see: https://gateway-api.sigs.k8s.io/guides/)
@@ -139,7 +147,7 @@ resources:
 # This is to setup the liveness and readiness probes more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 livenessProbe:
   httpGet:
-    path: /
+    path: /health/
     port: 8000
     httpHeaders:
       - name: Host
@@ -150,7 +158,7 @@ livenessProbe:
   failureThreshold: 3
 readinessProbe:
   httpGet:
-    path: /
+    path: /health/
     port: 8000
     httpHeaders:
       - name: Host
