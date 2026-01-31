@@ -15,6 +15,22 @@ gateway:
 
 # Virtual Services
 virtualServices:
+  - name: respondua
+    namespace: respondua
+    gateway: gateway/default-gateway
+    hosts:
+      - "respondua.org"
+      - "www.respondua.org"
+    http:
+      - match:
+          - uri:
+              prefix: /
+        route:
+          - destination:
+              host: respondua
+              port:
+                number: 8000
+
   - name: argocd
     namespace: argo-cd
     gateway: gateway/default-gateway
