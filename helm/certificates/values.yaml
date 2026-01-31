@@ -1,5 +1,5 @@
 # Domain configuration
-domain: dmytroserbeniuk.com
+domain: respondua.org
 
 # Namespace where certificates will be stored
 namespace: gateway
@@ -9,8 +9,8 @@ clusterIssuer: letsencrypt-prod
 
 # Certificates to create
 certificates:
-  - name: wildcard-dmytroserbeniuk-com
-    secretName: wildcard-dmytroserbeniuk-com-tls
+  - name: wildcard-respondua-org
+    secretName: wildcard-respondua-org-tls
     dnsNames:
-      - "*.dmytroserbeniuk.com"
-      - "dmytroserbeniuk.com"
+      - "*.respondua.org"
+      - "respondua.org"
