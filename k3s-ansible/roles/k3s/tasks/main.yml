@@ -1,0 +1,160 @@
+---
+# K3s installation and upgrade tasks
+
+- name: Ensure kernel modules are loaded
+  copy:
+    dest: /etc/modules-load.d/k8s.conf
+    content: |
+      br_netfilter
+      overlay
+    mode: "0644"
+
+- name: Load kernel modules now
+  modprobe:
+    name: "{{ item }}"
+    state: present
+  loop: "{{ required_kernel_modules }}"
+
+- name: Set sysctl params for Kubernetes
+  copy:
+    dest: /etc/sysctl.d/99-kubernetes.conf
+    content: |
+      net.ipv4.ip_forward = 1
+      net.bridge.bridge-nf-call-iptables = 1
+      net.bridge.bridge-nf-call-ip6tables = 1
+    mode: "0644"
+
+- name: Apply sysctl
+  command: sysctl --system
+
+- name: Check if K3s is installed
+  stat:
+    path: /usr/local/bin/k3s
+  register: k3s_binary
+
+- name: Get current K3s version
+  command: k3s --version
+  register: k3s_current_version
+  changed_when: false
+  failed_when: false
+  when: k3s_binary.stat.exists
+
+- name: Parse current version
+  set_fact:
+    k3s_installed_version: "{{ k3s_current_version.stdout | regex_search('v[0-9]+\\.[0-9]+\\.[0-9]+\\+k3s[0-9]+') }}"
+  when: 
+    - k3s_binary.stat.exists
+    - k3s_current_version.rc == 0
+
+- name: Check if upgrade needed
+  set_fact:
+    k3s_needs_upgrade: "{{ k3s_installed_version is defined and k3s_installed_version != k3s_version }}"
+  when: k3s_binary.stat.exists
+
+- name: Ensure k3s config dir exists
+  file:
+    path: /etc/rancher/k3s
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Write k3s config.yaml (declarative)
+  copy:
+    dest: /etc/rancher/k3s/config.yaml
+    owner: root
+    group: root
+    mode: "0644"
+    content: |
+      cluster-init: {{ (k3s_cluster_init | default(false) | bool) | lower }}
+      cluster-cidr: "{{ k3s_server_config['cluster-cidr'] }}"
+      service-cidr: "{{ k3s_server_config['service-cidr'] }}"
+      write-kubeconfig-mode: "{{ k3s_server_config['write-kubeconfig-mode'] }}"
+      {% if k3s_server_config.get('etcd-snapshot-schedule-cron') %}
+      etcd-snapshot-schedule-cron: "{{ k3s_server_config['etcd-snapshot-schedule-cron'] }}"
+      {% endif %}
+      {% if k3s_server_config.get('etcd-snapshot-retention') %}
+      etcd-snapshot-retention: {{ k3s_server_config['etcd-snapshot-retention'] }}
+      {% endif %}
+      {% if (k3s_server_config.get('disable') | default([])) | length > 0 %}
+      disable:
+      {% for item in k3s_server_config['disable'] %}
+        - "{{ item }}"
+      {% endfor %}
+      {% endif %}
+      {% if (k3s_server_config.get('tls-san') | default([])) | length > 0 %}
+      tls-san:
+      {% for san in k3s_server_config['tls-san'] %}
+        - "{{ san }}"
+      {% endfor %}
+      {% endif %}
+  register: k3s_config_written
+
+- name: Create etcd snapshot before upgrade
+  command: k3s etcd-snapshot save --name pre-upgrade-{{ ansible_date_time.epoch }}
+  when:
+    - k3s_binary.stat.exists
+    - k3s_needs_upgrade | default(false)
+    - k3s_snapshot_before_upgrade
+
+- name: Drain node (if configured)
+  command: kubectl drain {{ ansible_hostname }} --ignore-daemonsets --delete-emptydir-data --force
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - k3s_binary.stat.exists
+    - k3s_needs_upgrade | default(false)
+    - k3s_do_drain
+  ignore_errors: true
+
+- name: Install or upgrade K3s (version only, config.yaml controls args)
+  shell: |
+    set -euo pipefail
+    curl -sfL https://get.k3s.io | INSTALL_K3S_VERSION="{{ k3s_version }}" sh -
+  args:
+    executable: /bin/bash
+  when:
+    - not k3s_binary.stat.exists or (k3s_needs_upgrade | default(false))
+    - not ansible_check_mode
+
+- name: Restart k3s if config changed
+  systemd:
+    name: k3s
+    state: restarted
+    daemon_reload: true
+  when:
+    - k3s_binary.stat.exists
+    - k3s_config_written.changed
+
+- name: Wait for K3s to be ready
+  command: k3s kubectl get nodes
+  register: k3s_nodes
+  until: k3s_nodes.rc == 0
+  retries: 30
+  delay: 10
+  changed_when: false
+
+- name: Uncordon node (if it was drained)
+  command: kubectl uncordon {{ ansible_hostname }}
+  environment:
+    KUBECONFIG: /etc/rancher/k3s/k3s.yaml
+  when:
+    - k3s_needs_upgrade | default(false)
+    - k3s_do_drain
+  ignore_errors: true
+
+- name: Cleanup old snapshots
+  shell: |
+    ls -t /var/lib/rancher/k3s/server/db/snapshots/ | tail -n +{{ k3s_snapshot_retention | int + 1 }} | xargs -r rm -f
+  args:
+    executable: /bin/bash
+  when: k3s_snapshot_retention is defined
+
+- name: Display K3s version
+  command: k3s --version
+  register: final_version
+  changed_when: false
+
+- name: Show installed version
+  debug:
+    msg: "K3s version: {{ final_version.stdout }}"
