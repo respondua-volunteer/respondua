@@ -16,7 +16,7 @@ gateway:
 # Virtual Services
 virtualServices:
   - name: respondua
-    namespace: respondua
+    namespace: gateway
     gateway: gateway/default-gateway
     hosts:
       - "respondua.org"
@@ -27,7 +27,7 @@ virtualServices:
               prefix: /
         route:
           - destination:
-              host: respondua
+              host: respondua.respondua.svc.cluster.local
               port:
                 number: 8000
 
