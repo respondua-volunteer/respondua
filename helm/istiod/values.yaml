@@ -1,0 +1,263 @@
+# Umbrella chart values for istiod
+
+# Values are passed to the istiod subchart
+istiod:
+  # "_internal_defaults_do_not_set" is a workaround for Helm limitations. Users should NOT set "._internal_defaults_do_not_set" explicitly, but rather directly set the fields internally.
+  # For instance, instead of `--set _internal_defaults_do_not_set.foo=bar``, just set `--set foo=bar`.
+  autoscaleEnabled: true
+  autoscaleMin: 1
+  autoscaleMax: 5
+  autoscaleBehavior: {}
+  replicaCount: 1
+  rollingMaxSurge: 100%
+  rollingMaxUnavailable: 25%
+
+  hub: ""
+  tag: ""
+  variant: ""
+
+  # Can be a full hub/image:tag
+  image: pilot
+  traceSampling: 1.0
+
+  # Resources for a small pilot install
+  resources:
+    requests:
+      cpu: 500m
+      memory: 2048Mi
+
+  # Set to `type: RuntimeDefault` to use the default profile if available.
+  seccompProfile: {}
+
+  # Whether to use an existing CNI installation
+  cni:
+    enabled: false
+    provider: default
+
+  # Additional container arguments
+  extraContainerArgs: []
+
+  env:
+    PILOT_ENABLE_IP_AUTOALLOCATE: true
+    ENABLE_NATIVE_SIDECARS: "true"
+    PILOT_FILTER_GATEWAY_CLUSTER_CONFIG: "true"
+    PILOT_SCOPE_GATEWAY_TO_NAMESPACE: "true"
+
+  envVarFrom: []
+
+  # Settings related to the untaint controller
+  taint:
+    enabled: false
+    namespace: ""
+
+  affinity: {}
+  tolerations: []
+
+  cpu:
+    targetAverageUtilization: 80
+  memory: {}
+
+  # Additional volumeMounts to the istiod container
+  volumeMounts: []
+
+  # Additional volumes to the istiod pod
+  volumes: []
+
+  # Inject initContainers into the istiod pod
+  initContainers: []
+
+  nodeSelector: {}
+  podAnnotations: {}
+  serviceAnnotations: {}
+  serviceAccountAnnotations: {}
+  sidecarInjectorWebhookAnnotations: {}
+
+  topologySpreadConstraints: []
+
+  jwksResolverExtraRootCA: ""
+
+  keepaliveMaxServerConnectionAge: 30m
+
+  # Additional labels to apply to the deployment.
+  deploymentLabels: {}
+
+  ## Mesh config settings
+
+  # Install the mesh config map, generated from values.yaml.
+  configMap: true
+
+  # Additional labels to apply on the pod level for monitoring and logging configuration.
+  podLabels: {}
+
+  # Setup how istiod Service is configured.
+  ipFamilyPolicy: ""
+  ipFamilies: []
+
+  # Ambient mode only.
+  trustedZtunnelNamespace: ""
+  trustedZtunnelName: ""
+
+  sidecarInjectorWebhook:
+    neverInjectSelector: []
+    alwaysInjectSelector: []
+    injectedAnnotations: {}
+    enableNamespacesByDefault: false
+    reinvocationPolicy: Never
+    rewriteAppHTTPProbe: true
+    templates: {}
+    defaultTemplates: []
+    
+  istiodRemote:
+    enabled: false
+    injectionURL: ""
+    injectionPath: "/inject"
+    injectionCABundle: ""
+    
+  telemetry:
+    enabled: true
+    v2:
+      enabled: true
+      prometheus:
+        enabled: true
+      stackdriver:
+        enabled: false
+        
+  # Revision is set as 'version' label and part of the resource names when installing multiple control planes.
+  revision: "1-28-0"
+
+  # Revision tags are aliases to Istio control plane revisions
+  revisionTags: []
+
+  # For Helm compatibility.
+  ownerName: ""
+
+  # meshConfig defines runtime configuration of components
+  meshConfig:
+    outboundTrafficPolicy:
+      mode: REGISTRY_ONLY
+    enablePrometheusMerge: true
+    proxyMetadata:
+      ISTIO_META_DNS_AUTO_ALLOCATE: 'false'
+      ISTIO_META_DNS_CAPTURE: 'true'
+
+  experimental:
+    stableValidationPolicy: false
+
+  global:
+    # Used to locate istiod.
+    istioNamespace: istio-system
+    certSigners: []
+    
+    defaultPodDisruptionBudget:
+      enabled: true
+
+    defaultResources:
+      requests:
+        cpu: 10m
+
+    # Default hub for Istio images.
+    hub: docker.io/istio
+    # Default tag for Istio images.
+    tag: 1.28.0
+    variant: ""
+
+    imagePullPolicy: ""
+    imagePullSecrets: []
+
+    istiod:
+      enableAnalysis: false
+
+    logAsJson: false
+
+    logging:
+      level: "default:info"
+
+    omitSidecarInjectorConfigMap: false
+    operatorManageWebhooks: false
+
+    priorityClassName: ""
+
+    proxy:
+      image: proxyv2
+      autoInject: enabled
+      clusterDomain: "cluster.local"
+      componentLogLevel: "misc:error"
+      excludeInboundPorts: ""
+      includeInboundPorts: "*"
+      includeIPRanges: "*"
+      excludeIPRanges: ""
+      includeOutboundPorts: ""
+      excludeOutboundPorts: ""
+      logLevel: warning
+      outlierLogPath: ""
+      privileged: false
+      readinessFailureThreshold: 4
+      readinessInitialDelaySeconds: 0
+      readinessPeriodSeconds: 15
+      
+      startupProbe:
+        enabled: true
+        failureThreshold: 600
+
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: 2000m
+          memory: 1024Mi
+
+      statusPort: 15020
+      tracer: "none"
+
+    proxy_init:
+      image: proxyv2
+      forceApplyIptables: false
+
+    remotePilotAddress: ""
+
+    caAddress: ""
+    externalIstiod: false
+    configCluster: false
+    configValidation: true
+    meshID: ""
+    meshNetworks: {}
+    mountMtlsCerts: false
+
+    multiCluster:
+      enabled: false
+      clusterName: ""
+
+    network: ""
+    pilotCertProvider: istiod
+
+    sds:
+      token:
+        aud: istio-ca
+
+    sts:
+      servicePort: 0
+
+    caName: ""
+
+    waypoint:
+      resources:
+        requests:
+          cpu: 100m
+          memory: 128Mi
+        limits:
+          cpu: "2"
+          memory: 1Gi
+      affinity: {}
+      topologySpreadConstraints: []
+      nodeSelector: {}
+      tolerations: []
+
+  base:
+    enableIstioConfigCRDs: true
+
+  gateways:
+    securityContext: {}
+    seccompProfile: {}
+
+  gatewayClasses: {}

@@ -1,0 +1,63 @@
+{{- if .Values.backup.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.postgresql.fullnameOverride }}-restore-script
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.postgresql.fullnameOverride }}
+    component: restore
+data:
+  restore.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    BACKUP_DIR="/backups"
+    BACKUP_FILE="${1:-}"
+
+    if [ -z "${BACKUP_FILE}" ]; then
+      echo "Usage: restore.sh <backup_filename>"
+      echo ""
+      echo "Available backups:"
+      ls -lh "${BACKUP_DIR}"/postgresql_backup_*.sql.gz 2>/dev/null || echo "No backups found"
+      exit 1
+    fi
+
+    if [ ! -f "${BACKUP_DIR}/${BACKUP_FILE}" ]; then
+      echo "ERROR: Backup file not found: ${BACKUP_DIR}/${BACKUP_FILE}"
+      echo ""
+      echo "Available backups:"
+      ls -lh "${BACKUP_DIR}"/postgresql_backup_*.sql.gz
+      exit 1
+    fi
+
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Starting PostgreSQL restore from ${BACKUP_FILE}..."
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] WARNING: This will overwrite all existing databases!"
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Waiting 5 seconds... Press Ctrl+C to cancel."
+    sleep 5
+
+    # Restore from backup
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Restoring backup..."
+    gunzip < "${BACKUP_DIR}/${BACKUP_FILE}" | PGPASSWORD="${POSTGRES_PASSWORD}" psql \
+      -h {{ .Values.postgresql.fullnameOverride }} \
+      -U postgres
+
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Restore completed successfully!"
+
+  list-backups.sh: |
+    #!/bin/bash
+    BACKUP_DIR="/backups"
+    
+    echo "Available PostgreSQL backups:"
+    echo "=============================="
+    
+    if ls "${BACKUP_DIR}"/postgresql_backup_*.sql.gz 1> /dev/null 2>&1; then
+      ls -lh "${BACKUP_DIR}"/postgresql_backup_*.sql.gz | awk '{print $9, "(" $5 ")", "Modified:", $6, $7, $8}'
+      echo ""
+      echo "Total backups: $(ls -1 ${BACKUP_DIR}/postgresql_backup_*.sql.gz | wc -l)"
+      echo "Total size: $(du -sh ${BACKUP_DIR} | cut -f1)"
+    else
+      echo "No backups found in ${BACKUP_DIR}"
+    fi
+{{- end }}

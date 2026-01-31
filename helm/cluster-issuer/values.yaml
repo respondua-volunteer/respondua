@@ -1,0 +1,17 @@
+# Namespace for cert-manager
+namespace: cert-manager
+
+# ClusterIssuer configuration
+clusterIssuer:
+  name: letsencrypt-prod
+  certEmail: dserbeniukgood@gmail.com
+  
+  # Staging configuration
+  staging:
+    enabled: false
+
+# Cloudflare configuration
+cloudflare:
+  apiTokenSecretRef:
+    name: cloudflare-api-token
+    key: api-token

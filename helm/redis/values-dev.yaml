@@ -1,0 +1,47 @@
+# Redis Development Environment Values
+# Minimal resources for local development
+
+redis:
+  enabled: true
+  
+  # Use standalone mode for development
+  architecture: standalone
+  
+  # Authentication
+  auth:
+    enabled: true
+    password: "redis-dev-password"
+  
+  # Master configuration
+  master:
+    count: 1
+    
+    # Minimal resources for dev
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 200m
+        memory: 128Mi
+    
+    # Smaller storage for dev
+    persistence:
+      enabled: true
+      size: 1Gi
+  
+  # Disable replicas in standalone mode
+  replica:
+    replicaCount: 0
+  
+  # Disable sentinel
+  sentinel:
+    enabled: false
+  
+  # Disable metrics for dev
+  metrics:
+    enabled: false
+  
+  # Network policy
+  networkPolicy:
+    enabled: false

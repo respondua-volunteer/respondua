@@ -1,0 +1,43 @@
+{{- if .Values.trafficManagement.destinationRules.enabled }}
+{{- range .Values.trafficManagement.destinationRules.rules }}
+---
+apiVersion: networking.istio.io/v1
+kind: DestinationRule
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace }}
+spec:
+  host: {{ .host }}
+  {{- if .trafficPolicy }}
+  trafficPolicy:
+    {{- if .trafficPolicy.loadBalancer }}
+    loadBalancer:
+      {{- toYaml .trafficPolicy.loadBalancer | nindent 6 }}
+    {{- end }}
+    {{- if .trafficPolicy.connectionPool }}
+    connectionPool:
+      {{- toYaml .trafficPolicy.connectionPool | nindent 6 }}
+    {{- end }}
+    {{- if .trafficPolicy.outlierDetection }}
+    outlierDetection:
+      {{- toYaml .trafficPolicy.outlierDetection | nindent 6 }}
+    {{- end }}
+    {{- if .trafficPolicy.tls }}
+    tls:
+      {{- toYaml .trafficPolicy.tls | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- if .subsets }}
+  subsets:
+  {{- range .subsets }}
+  - name: {{ .name }}
+    labels:
+      {{- toYaml .labels | nindent 6 }}
+    {{- if .trafficPolicy }}
+    trafficPolicy:
+      {{- toYaml .trafficPolicy | nindent 6 }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

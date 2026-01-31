@@ -1,0 +1,158 @@
+{{- if .Values.backup.enabled }}
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.postgresql.fullnameOverride }}-backup-script
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.postgresql.fullnameOverride }}
+    component: backup
+data:
+  backup.sh: |
+    #!/bin/bash
+    set -euo pipefail
+
+    # Configuration
+    BACKUP_DIR="/backups"
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    RETENTION_DAYS={{ .Values.backup.retentionDays }}
+    DATABASE="{{ .Values.backup.database }}"
+
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Starting PostgreSQL backup..."
+    echo "Database: ${DATABASE}"
+
+    # Create backup directory if not exists
+    mkdir -p "${BACKUP_DIR}"
+
+    # Determine backup type and filename
+    if [ -z "${DATABASE}" ] || [ "${DATABASE}" = "all" ]; then
+      # Full backup with pg_dumpall
+      BACKUP_FILE="${BACKUP_DIR}/postgresql_backup_${TIMESTAMP}.sql.gz"
+      echo "[$(date +'%Y-%m-%d %H:%M:%S')] Performing FULL backup (all databases)..."
+      
+      PGPASSWORD="${POSTGRES_PASSWORD}" pg_dumpall -h {{ .Values.postgresql.fullnameOverride }} \
+        -U postgres \
+        | gzip > "${BACKUP_FILE}"
+    else
+      # Single database backup with pg_dump
+      BACKUP_FILE="${BACKUP_DIR}/${DATABASE}_backup_${TIMESTAMP}.sql.gz"
+      echo "[$(date +'%Y-%m-%d %H:%M:%S')] Performing SINGLE database backup: ${DATABASE}..."
+      
+      PGPASSWORD="${POSTGRES_PASSWORD}" pg_dump -h {{ .Values.postgresql.fullnameOverride }} \
+        -U postgres \
+        -d "${DATABASE}" \
+        | gzip > "${BACKUP_FILE}"
+    fi
+
+    if [ -f "${BACKUP_FILE}" ]; then
+      BACKUP_SIZE=$(du -h "${BACKUP_FILE}" | cut -f1)
+      echo "[$(date +'%Y-%m-%d %H:%M:%S')] Backup completed successfully: ${BACKUP_FILE} (${BACKUP_SIZE})"
+    else
+      echo "[$(date +'%Y-%m-%d %H:%M:%S')] ERROR: Backup file not created!"
+      exit 1
+    fi
+
+    # Clean up old backups (both full and single database)
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Cleaning up backups older than ${RETENTION_DAYS} days..."
+    find "${BACKUP_DIR}" -name "*_backup_*.sql.gz" -type f -mtime +${RETENTION_DAYS} -delete
+
+    # List remaining backups
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Current backups:"
+    ls -lh "${BACKUP_DIR}"/*_backup_*.sql.gz 2>/dev/null || echo "No backups found"
+
+    echo "[$(date +'%Y-%m-%d %H:%M:%S')] Backup process completed."
+
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: {{ .Values.postgresql.fullnameOverride }}-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.postgresql.fullnameOverride }}
+    component: backup
+spec:
+  schedule: {{ .Values.backup.schedule | quote }}
+  successfulJobsHistoryLimit: {{ .Values.backup.successfulJobsHistoryLimit }}
+  failedJobsHistoryLimit: {{ .Values.backup.failedJobsHistoryLimit }}
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      backoffLimit: {{ .Values.backup.backoffLimit }}
+      template:
+        metadata:
+          labels:
+            app: {{ .Values.postgresql.fullnameOverride }}
+            component: backup
+        spec:
+          restartPolicy: OnFailure
+          
+          {{- if .Values.backup.serviceAccount.create }}
+          serviceAccountName: {{ .Values.postgresql.fullnameOverride }}-backup
+          {{- end }}
+
+          containers:
+          - name: backup
+            image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
+            imagePullPolicy: IfNotPresent
+            
+            command:
+            - /bin/bash
+            - /scripts/backup.sh
+            
+            env:
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgresql.auth.existingSecret }}
+                  key: {{ .Values.postgresql.auth.secretKeys.adminPasswordKey }}
+            
+            volumeMounts:
+            - name: backup-script
+              mountPath: /scripts
+              readOnly: true
+            - name: backup-storage
+              mountPath: /backups
+            
+            resources:
+              {{- toYaml .Values.backup.resources | nindent 14 }}
+          
+          volumes:
+          - name: backup-script
+            configMap:
+              name: {{ .Values.postgresql.fullnameOverride }}-backup-script
+              defaultMode: 0755
+          - name: backup-storage
+            persistentVolumeClaim:
+              claimName: {{ .Values.postgresql.fullnameOverride }}-backup-pvc
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ .Values.postgresql.fullnameOverride }}-backup-pvc
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.postgresql.fullnameOverride }}
+    component: backup
+spec:
+  accessModes:
+  - ReadWriteOnce
+  storageClassName: {{ .Values.backup.persistence.storageClass }}
+  resources:
+    requests:
+      storage: {{ .Values.backup.persistence.size }}
+
+{{- if .Values.backup.serviceAccount.create }}
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.postgresql.fullnameOverride }}-backup
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Values.postgresql.fullnameOverride }}
+    component: backup
+{{- end }}
+{{- end }}

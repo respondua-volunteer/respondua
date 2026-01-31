@@ -1,0 +1,100 @@
+postgresql:
+  image:
+    repository: bitnamilegacy/postgresql
+    tag: 17.6.0-debian-12-r4
+
+  fullnameOverride: postgresql
+
+  architecture: standalone
+
+  auth:
+    existingSecret: postgresql-secrets
+    secretKeys:
+      adminPasswordKey: POSTGRES_ADMIN_PASSWORD
+
+  primary:
+    extendedConfiguration: |
+      max_connections = 100                 # reasonable for small DB
+      shared_buffers = 128MB                # 25% of limits memory
+      work_mem = 2MB                        # memory per connection for queries
+      maintenance_work_mem = 64MB           # memory for maintenance tasks (VACUUM, CREATE INDEX)
+      checkpoint_completion_target = 0.9    # how aggressively to complete checkpoints
+      wal_buffers = 4MB                     # memory for WAL (Write-Ahead Log) buffers
+      effective_cache_size = 384MB          # estimate of OS cache available for queries
+
+      # --- Download the necessary extensions to analyze requests ---
+      shared_preload_libraries = 'auto_explain,pg_stat_statements'
+
+    persistence:
+      storageClass: local-path
+      size: 10Gi
+
+    persistentVolumeClaimRetentionPolicy:
+      enabled: true
+
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+# Backup configuration
+backup:
+  enabled: true
+  
+  # Database to backup
+  # Leave empty or set to "all" to backup all databases (pg_dumpall)
+  # Or specify database name: "auth", "grafana", etc.
+  database: "all"
+  
+  # Cron schedule (every day at 2 AM)
+  schedule: "0 2 * * *"
+  
+  # Retention period for backups (in days)
+  retentionDays: 7
+  
+  # Number of successful/failed jobs to keep
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  
+  # Number of retries before marking job as failed
+  backoffLimit: 3
+  
+  # Persistent storage for backups
+  persistence:
+    storageClass: local-path
+    size: 5Gi
+  
+  # Service account configuration
+  serviceAccount:
+    create: true
+  
+  # Resources for backup job
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# Restore configuration
+restore:
+  # Specify the backup file to restore from
+  # Example: "postgresql_backup_20251208_143530.sql.gz" for full backup
+  # Example: "auth_backup_20251208_143530.sql.gz" for single database
+  # Leave empty to not create restore job
+  backupFileName: ""
+  
+  # Database to restore to (only for single database backups)
+  # Leave empty for full backup restore (pg_dumpall)
+  # Specify database name for single database: "auth", "grafana", etc.
+  database: ""
+  
+  # WARNING: This will drop/overwrite data!
+  # For full backups: drops all databases
+  # For single database: drops and recreates specified database
+  # Set to true to confirm you understand the risks
+  confirmDataLoss: false

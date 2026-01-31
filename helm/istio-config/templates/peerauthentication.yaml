@@ -1,0 +1,57 @@
+{{- if .Values.security.peerAuthentication.enabled }}
+---
+# Global mTLS policy for all namespaces with Istio injection
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: istio-system
+spec:
+  mtls:
+    mode: {{ .Values.security.peerAuthentication.mode }}
+---
+# mTLS for argo-cd namespace
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: argo-cd
+spec:
+  mtls:
+    mode: {{ .Values.security.peerAuthentication.mode }}
+---
+# Disable mTLS for ArgoCD Dex Server (uses its own TLS)
+{{- if .Values.security.peerAuthentication.exceptions }}
+{{- range .Values.security.peerAuthentication.exceptions }}
+---
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace }}
+spec:
+  selector:
+    matchLabels:
+      {{- toYaml .selector.matchLabels | nindent 6 }}
+  mtls:
+    mode: DISABLE
+  {{- if .portLevelMtls }}
+  portLevelMtls:
+    {{- range $port, $config := .portLevelMtls }}
+    {{ $port }}:
+      mode: {{ $config.mode }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}
+---
+# mTLS for observability namespace
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: default
+  namespace: observability
+spec:
+  mtls:
+    mode: {{ .Values.security.peerAuthentication.mode }}
+{{- end }}

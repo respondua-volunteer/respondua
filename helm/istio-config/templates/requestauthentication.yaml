@@ -1,0 +1,54 @@
+{{- if .Values.security.requestAuthentication.enabled }}
+{{- range .Values.security.requestAuthentication.policies }}
+---
+apiVersion: security.istio.io/v1
+kind: RequestAuthentication
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace }}
+spec:
+  {{- if .selector }}
+  selector:
+    matchLabels:
+      {{- toYaml .selector.matchLabels | nindent 6 }}
+  {{- end }}
+  
+  jwtRules:
+  {{- range .jwtRules }}
+  - issuer: {{ .issuer | quote }}
+    {{- if .jwksUri }}
+    jwksUri: {{ .jwksUri | quote }}
+    {{- end }}
+    {{- if .jwks }}
+    jwks: {{ .jwks | quote }}
+    {{- end }}
+    {{- if .audiences }}
+    audiences:
+    {{- range .audiences }}
+    - {{ . | quote }}
+    {{- end }}
+    {{- end }}
+    {{- if .fromHeaders }}
+    fromHeaders:
+    {{- range .fromHeaders }}
+    - name: {{ .name | quote }}
+      {{- if .prefix }}
+      prefix: {{ .prefix | quote }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .fromParams }}
+    fromParams:
+    {{- range .fromParams }}
+    - {{ . | quote }}
+    {{- end }}
+    {{- end }}
+    {{- if .outputPayloadToHeader }}
+    outputPayloadToHeader: {{ .outputPayloadToHeader | quote }}
+    {{- end }}
+    {{- if .forwardOriginalToken }}
+    forwardOriginalToken: {{ .forwardOriginalToken }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

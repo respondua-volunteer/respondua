@@ -1,0 +1,104 @@
+{{- if .Values.security.authorization.enabled }}
+{{- range .Values.security.authorization.policies }}
+---
+apiVersion: security.istio.io/v1
+kind: AuthorizationPolicy
+metadata:
+  name: {{ .name }}
+  namespace: {{ .namespace }}
+spec:
+  {{- if .selector }}
+  selector:
+    matchLabels:
+      {{- toYaml .selector.matchLabels | nindent 6 }}
+  {{- end }}
+  
+  {{- if .action }}
+  action: {{ .action }}
+  {{- end }}
+  
+  {{- if .rules }}
+  rules:
+  {{- range .rules }}
+  - {{- if .from }}
+    from:
+    {{- range .from }}
+    - source:
+        {{- if .principals }}
+        principals:
+        {{- range .principals }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .requestPrincipals }}
+        requestPrincipals:
+        {{- range .requestPrincipals }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .namespaces }}
+        namespaces:
+        {{- range .namespaces }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .ipBlocks }}
+        ipBlocks:
+        {{- range .ipBlocks }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .to }}
+    to:
+    {{- range .to }}
+    - operation:
+        {{- if .methods }}
+        methods:
+        {{- range .methods }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .paths }}
+        paths:
+        {{- range .paths }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .hosts }}
+        hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+        {{- if .ports }}
+        ports:
+        {{- range .ports }}
+        - {{ . | quote }}
+        {{- end }}
+        {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- if .when }}
+    when:
+    {{- range .when }}
+    - key: {{ .key }}
+      {{- if .values }}
+      values:
+      {{- range .values }}
+      - {{ . | quote }}
+      {{- end }}
+      {{- end }}
+      {{- if .notValues }}
+      notValues:
+      {{- range .notValues }}
+      - {{ . | quote }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+    {{- end }}
+  {{- end }}
+  {{- end }}
+{{- end }}
+{{- end }}

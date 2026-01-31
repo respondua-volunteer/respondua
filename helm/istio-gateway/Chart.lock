@@ -1,0 +1,6 @@
+dependencies:
+- name: gateway
+  repository: https://istio-release.storage.googleapis.com/charts
+  version: 1.28.0
+digest: sha256:bbff8e0becf9745fdd37bbddbfa38ae9e9428891426d1f053171b66ce9c5e3bc
+generated: "2025-12-02T15:52:51.617579+01:00"

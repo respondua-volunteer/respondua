@@ -1,0 +1,23 @@
+apiVersion: v2
+name: istio-gateway
+description: Umbrella chart for Istio Gateway
+type: application
+version: 1.0.0
+appVersion: "1.28.0"
+keywords:
+  - istio
+  - service-mesh
+  - gateway
+  - ingress
+home: https://istio.io/
+sources:
+  - https://github.com/istio/istio
+  - https://github.com/dimaserbenyuk/mcp-incident-analyst
+maintainers:
+  - name: dimaserbenyuk
+
+dependencies:
+  - name: gateway
+    version: 1.28.0
+    repository: https://istio-release.storage.googleapis.com/charts
+    condition: gateway.enabled
