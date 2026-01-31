@@ -82,11 +82,11 @@ metadata:
   namespace: argo-cd
   labels:
     app.kubernetes.io/component: infrastructure
-    app.kubernetes.io/part-of: mcp-incident-analyst
+    app.kubernetes.io/part-of: respondua
 spec:
   project: infrastructure
   source:
-    repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+    repoURL: https://github.com/respondua-volunteer/respondua.git
     targetRevision: HEAD
     path: helm/metallb
   destination:
@@ -99,60 +99,60 @@ spec:
     syncOptions:
     - CreateNamespace=true
 ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: cert-manager
-#   namespace: argo-cd
-#   labels:
-#     app.kubernetes.io/component: infrastructure
-#     app.kubernetes.io/part-of: mcp-incident-analyst
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/cert-manager
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: cert-manager
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#     - CreateNamespace=true
-#   ignoreDifferences:
-#   - group: admissionregistration.k8s.io
-#     kind: MutatingWebhookConfiguration
-#     jqPathExpressions:
-#     - .webhooks[].clientConfig.caBundle
-#   - group: admissionregistration.k8s.io
-#     kind: ValidatingWebhookConfiguration
-#     jqPathExpressions:
-#     - .webhooks[].clientConfig.caBundle
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: cluster-issuer
-#   namespace: argo-cd
-#   labels:
-#     app.kubernetes.io/component: infrastructure
-#     app.kubernetes.io/part-of: mcp-incident-analyst
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/cluster-issuer
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: cert-manager
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cert-manager
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/cert-manager
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  ignoreDifferences:
+  - group: admissionregistration.k8s.io
+    kind: MutatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[].clientConfig.caBundle
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[].clientConfig.caBundle
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-issuer
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/cluster-issuer
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
 # ---
 # apiVersion: argoproj.io/v1alpha1
 # kind: Application
