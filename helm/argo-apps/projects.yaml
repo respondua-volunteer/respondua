@@ -95,11 +95,14 @@ spec:
   
   sourceRepos:
   - https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+  - https://github.com/respondua-volunteer/respondua.git
   
   destinations:
   - namespace: authenticate
     server: https://kubernetes.default.svc
   - namespace: web
+    server: https://kubernetes.default.svc
+  - namespace: respondua
     server: https://kubernetes.default.svc
   - namespace: mcp-server
     server: https://kubernetes.default.svc
