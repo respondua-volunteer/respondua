@@ -11,7 +11,7 @@ image:
   # This sets the pull policy for images.
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1.1.5"
+  tag: "v1.1.6"
 
 # This is for the secrets for pulling an image from a private repository more information can be found here: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
 imagePullSecrets:
@@ -92,7 +92,7 @@ envFrom:
 
 # Migration job configuration (manual trigger only)
 migrations:
-  enabled: false  # Set to true when you want to run migrations
+  enabled: true  # Set to true when you want to run migrations
 
 # Collectstatic job configuration (manual trigger only)
 collectstatic:
