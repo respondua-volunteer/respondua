@@ -1,0 +1,49 @@
+{{- if .Values.collectstatic.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "respondua.fullname" . }}-collectstatic-{{ now | date "20060102150405" }}
+  labels:
+    {{- include "respondua.labels" . | nindent 4 }}
+    app.kubernetes.io/component: collectstatic
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        {{- include "respondua.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: collectstatic
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+      - name: collectstatic
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+          - /bin/sh
+          - -c
+          - |
+            set -e
+            echo "Collecting static files to S3..."
+            python manage.py collectstatic --noinput
+            echo "Static files collected successfully!"
+        {{- if .Values.env }}
+        env:
+          {{- toYaml .Values.env | nindent 10 }}
+        {{- end }}
+        {{- if .Values.envFrom }}
+        envFrom:
+          {{- toYaml .Values.envFrom | nindent 10 }}
+        {{- end }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 256Mi
+          limits:
+            cpu: 500m
+            memory: 512Mi
+{{- end }}
