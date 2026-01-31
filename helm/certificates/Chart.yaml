@@ -10,6 +10,6 @@ keywords:
   - letsencrypt
 home: https://cert-manager.io/
 sources:
-  - https://github.com/dimaserbenyuk/mcp-incident-analyst
+  - https://github.com/respondua-volunteer/respondua
 maintainers:
   - name: dimaserbenyuk
