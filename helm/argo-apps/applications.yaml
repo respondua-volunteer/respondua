@@ -1,79 +1,79 @@
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: istio-base
-#   namespace: argo-cd
-#   labels:
-#     app.kubernetes.io/component: infrastructure
-#     app.kubernetes.io/part-of: mcp-incident-analyst
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/istio-base
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: istio-system
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#     - CreateNamespace=true
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: istiod
-#   namespace: argo-cd
-#   labels:
-#     app.kubernetes.io/component: infrastructure
-#     app.kubernetes.io/part-of: mcp-incident-analyst
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/istiod
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: istio-system
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#     - CreateNamespace=true
-#   ignoreDifferences:
-#   - group: admissionregistration.k8s.io
-#     kind: ValidatingWebhookConfiguration
-#     jqPathExpressions:
-#     - .webhooks[].failurePolicy
-# ---
-# apiVersion: argoproj.io/v1alpha1
-# kind: Application
-# metadata:
-#   name: istio-gateway
-#   namespace: argo-cd
-#   labels:
-#     app.kubernetes.io/component: infrastructure
-#     app.kubernetes.io/part-of: mcp-incident-analyst
-# spec:
-#   project: infrastructure
-#   source:
-#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
-#     targetRevision: HEAD
-#     path: helm/istio-gateway
-#   destination:
-#     server: https://kubernetes.default.svc
-#     namespace: gateway
-#   syncPolicy:
-#     automated:
-#       prune: true
-#       selfHeal: true
-#     syncOptions:
-#     - CreateNamespace=true
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-base
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/istio-base
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istiod
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/istiod
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: istio-system
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+  ignoreDifferences:
+  - group: admissionregistration.k8s.io
+    kind: ValidatingWebhookConfiguration
+    jqPathExpressions:
+    - .webhooks[].failurePolicy
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: istio-gateway
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: respondua
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/respondua-volunteer/respondua.git
+    targetRevision: HEAD
+    path: helm/istio-gateway
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gateway
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Application
