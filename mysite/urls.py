@@ -6,11 +6,13 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, Sp
 from django.conf.urls.i18n import i18n_patterns
 from django.views.i18n import set_language
 from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 
 from donations.views import stripe_webhook  # <-- import view
 
+@csrf_exempt
 def health_check(request):
-    """Health check endpoint for Kubernetes probes"""
+    """Health check endpoint for Kubernetes probes - no SSL redirect"""
     return HttpResponse("OK", status=200, content_type="text/plain")
 
 urlpatterns = [
