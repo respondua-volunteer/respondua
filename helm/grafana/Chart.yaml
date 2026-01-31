@@ -1,0 +1,11 @@
+apiVersion: v2
+name: grafana
+description: Umbrella chart for Grafana
+type: application
+version: 0.1.0
+appVersion: "12.3.0"
+
+dependencies:
+  - name: grafana
+    version: "10.3.0"
+    repository: https://grafana.github.io/helm-charts

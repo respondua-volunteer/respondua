@@ -1,0 +1,61 @@
+# Umbrella chart values for MetalLB
+
+# Global configuration
+global:
+  security:
+    allowInsecureImages: true
+
+# Values are passed to the metallb subchart
+metallb:
+  enabled: true
+  
+  # Controller configuration
+  controller:
+    image:
+      registry: quay.io
+      repository: metallb/controller
+      tag: v0.15.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+  
+  # Speaker configuration
+  speaker:
+    image:
+      registry: quay.io
+      repository: metallb/speaker
+      tag: v0.15.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 256Mi
+    
+    # Tolerations for speaker to run on all nodes
+    tolerations:
+    - key: node-role.kubernetes.io/control-plane
+      operator: Exists
+      effect: NoSchedule
+    - key: node-role.kubernetes.io/master
+      operator: Exists
+      effect: NoSchedule
+  
+  # IP Address Pool configuration
+  ipAddressPool:
+    name: default
+    autoAssign: true
+    avoidBuggyIPs: false
+    addresses:
+      - 167.86.121.19/32
+  
+  # L2 Advertisement configuration
+  l2Advertisement:
+    name: default
+    ipAddressPools:
+      - default

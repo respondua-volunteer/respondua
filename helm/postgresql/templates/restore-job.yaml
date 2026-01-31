@@ -1,0 +1,112 @@
+{{- if and .Values.restore.backupFileName .Values.restore.confirmDataLoss }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "postgresql.fullname" . }}-restore-{{ now | date "20060102-150405" }}
+  labels:
+    app: postgresql-restore
+    {{- include "postgresql.labels" . | nindent 4 }}
+spec:
+  backoffLimit: 1
+  template:
+    metadata:
+      labels:
+        app: postgresql-restore
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: restore
+        image: {{ .Values.postgresql.image.repository }}:{{ .Values.postgresql.image.tag }}
+        command:
+        - /bin/bash
+        - -c
+        - |
+          set -e
+          echo "========================================="
+          echo "PostgreSQL Database Restore"
+          echo "========================================="
+          echo "Backup file: {{ .Values.restore.backupFileName }}"
+          echo "Target host: {{ include "postgresql.fullname" . }}"
+          {{- if .Values.restore.database }}
+          echo "Target database: {{ .Values.restore.database }}"
+          {{- else }}
+          echo "Restore type: FULL (all databases)"
+          {{- end }}
+          echo "Time: $(date)"
+          echo ""
+          
+          # Check if backup file exists
+          if [ ! -f "/backups/{{ .Values.restore.backupFileName }}" ]; then
+            echo "ERROR: Backup file not found: /backups/{{ .Values.restore.backupFileName }}"
+            echo "Available backups:"
+            ls -lh /backups/
+            exit 1
+          fi
+          
+          echo "Backup file size: $(du -h /backups/{{ .Values.restore.backupFileName }} | cut -f1)"
+          echo ""
+          
+          {{- if .Values.restore.database }}
+          # Single database restore
+          echo "⚠️  WARNING: This will DROP and recreate database '{{ .Values.restore.database }}'!"
+          echo "⚠️  Proceeding with restore in 5 seconds..."
+          sleep 5
+          
+          echo ""
+          echo "Dropping existing database..."
+          psql -c "DROP DATABASE IF EXISTS {{ .Values.restore.database }};"
+          
+          echo "Creating database..."
+          psql -c "CREATE DATABASE {{ .Values.restore.database }};"
+          
+          echo "Restoring database..."
+          gunzip -c /backups/{{ .Values.restore.backupFileName }} | psql -d {{ .Values.restore.database }}
+          {{- else }}
+          # Full restore
+          echo "⚠️  WARNING: This will DROP all existing databases!"
+          echo "⚠️  Proceeding with restore in 5 seconds..."
+          sleep 5
+          
+          echo ""
+          echo "Starting full restore..."
+          gunzip -c /backups/{{ .Values.restore.backupFileName }} | psql
+          {{- end }}
+          
+          if [ $? -eq 0 ]; then
+            echo ""
+            echo "========================================="
+            echo "✅ Restore completed successfully!"
+            echo "========================================="
+            echo "Restored from: {{ .Values.restore.backupFileName }}"
+            {{- if .Values.restore.database }}
+            echo "Database: {{ .Values.restore.database }}"
+            {{- else }}
+            echo "Type: Full restore (all databases)"
+            {{- end }}
+            echo "Completed at: $(date)"
+          else
+            echo ""
+            echo "========================================="
+            echo "❌ Restore FAILED!"
+            echo "========================================="
+            exit 1
+          fi
+        env:
+        - name: PGHOST
+          value: {{ include "postgresql.fullname" . }}
+        - name: PGUSER
+          value: postgres
+        - name: PGPASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.postgresql.auth.existingSecret }}
+              key: {{ .Values.postgresql.auth.secretKeys.adminPasswordKey }}
+        volumeMounts:
+        - name: backup-storage
+          mountPath: /backups
+          readOnly: true
+      volumes:
+      - name: backup-storage
+        persistentVolumeClaim:
+          claimName: {{ include "postgresql.fullname" . }}-backup-pvc
+{{- end }}

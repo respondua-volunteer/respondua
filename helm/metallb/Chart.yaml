@@ -1,0 +1,22 @@
+apiVersion: v2
+name: metallb
+description: Umbrella chart for MetalLB Load Balancer
+type: application
+version: 1.0.0
+appVersion: "0.15.2"
+keywords:
+  - metallb
+  - load-balancer
+  - networking
+home: https://metallb.universe.tf/
+sources:
+  - https://github.com/metallb/metallb
+  - https://github.com/dimaserbenyuk/mcp-incident-analyst
+maintainers:
+  - name: dimaserbenyuk
+
+dependencies:
+  - name: metallb
+    version: 6.4.22
+    repository: https://charts.bitnami.com/bitnami
+    condition: metallb.enabled

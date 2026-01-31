@@ -1,0 +1,219 @@
+# Redis Production Environment Values
+# High availability with replication and monitoring
+
+redis:
+  enabled: true
+  
+  # Use replication mode for HA
+  architecture: replication
+  
+  # Authentication
+  auth:
+    enabled: true
+    # Use existing secret in production
+    existingSecret: "redis-credentials"
+    existingSecretPasswordKey: "redis-password"
+  
+  # Common configuration with AOF
+  commonConfiguration: |-
+    # Enable AOF persistence with fsync every second
+    appendonly yes
+    appendfsync everysec
+    # Disable RDB persistence
+    save ""
+    # Max memory policy
+    maxmemory-policy allkeys-lru
+    # Max memory (will be overridden by resources.limits.memory)
+    maxmemory 2gb
+  
+  # Master configuration
+  master:
+    count: 1
+    
+    # Production resources
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+    
+    # Production storage
+    persistence:
+      enabled: true
+      storageClass: "fast-ssd"  # Use your fast storage class
+      size: 20Gi
+      annotations:
+        backup: "daily"
+    
+    # Pod Disruption Budget
+    pdb:
+      create: true
+      minAvailable: 1
+    
+    # Anti-affinity to spread across nodes
+    podAntiAffinityPreset: soft
+  
+  # Replica configuration
+  replica:
+    replicaCount: 1
+    
+    # Production resources
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 2Gi
+    
+    # Production storage
+    persistence:
+      enabled: true
+      storageClass: "fast-ssd"
+      size: 20Gi
+      annotations:
+        backup: "daily"
+    
+    # Pod Disruption Budget
+    pdb:
+      create: true
+      minAvailable: 2
+    
+    # Autoscaling
+    autoscaling:
+      enabled: true
+      minReplicas: 3
+      maxReplicas: 10
+      targetCPU: 75
+      targetMemory: 80
+    
+    # Anti-affinity to spread across nodes
+    podAntiAffinityPreset: soft
+  
+  # Enable Sentinel for automatic failover
+  sentinel:
+    enabled: true
+    masterSet: mcp-redis-master
+    quorum: 2
+    downAfterMilliseconds: 10000
+    failoverTimeout: 180000
+    parallelSyncs: 1
+    
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  
+  # Network Policy
+  networkPolicy:
+    enabled: true
+    allowExternal: false
+    # Only allow traffic from authenticate and other services
+    extraIngress:
+      - from:
+        - podSelector:
+            matchLabels:
+              app: authenticate
+        - podSelector:
+            matchLabels:
+              app: mcp-server
+        ports:
+          - protocol: TCP
+            port: 6379
+  
+  # RBAC for Sentinel
+  rbac:
+    create: true
+  
+  # Service Account
+  serviceAccount:
+    create: true
+    automountServiceAccountToken: true
+    annotations:
+      eks.amazonaws.com/role-arn: "arn:aws:iam::ACCOUNT:role/redis-role"  # If using AWS IRSA
+  
+  # Enable Prometheus metrics
+  metrics:
+    enabled: true
+    
+    resources:
+      requests:
+        cpu: 50m
+        memory: 64Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+    
+    serviceMonitor:
+      enabled: true
+      interval: 30s
+      namespace: monitoring
+      additionalLabels:
+        prometheus: kube-prometheus
+    
+    prometheusRule:
+      enabled: true
+      namespace: monitoring
+      additionalLabels:
+        prometheus: kube-prometheus
+      rules:
+        - alert: RedisDown
+          expr: redis_up{service="redis-metrics"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Redis instance {{ $labels.instance }} down"
+            description: "Redis instance {{ $labels.instance }} has been down for more than 2 minutes"
+        
+        - alert: RedisMemoryHigh
+          expr: |
+            redis_memory_used_bytes{service="redis-metrics"} * 100
+            /
+            redis_memory_max_bytes{service="redis-metrics"}
+            > 90
+          for: 5m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Redis instance {{ $labels.instance }} memory usage high"
+            description: "Redis instance {{ $labels.instance }} is using {{ $value }}% of available memory"
+        
+        - alert: RedisKeyEviction
+          expr: |
+            increase(redis_evicted_keys_total{service="redis-metrics"}[5m]) > 0
+          for: 1m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Redis instance {{ $labels.instance }} evicting keys"
+            description: "Redis instance {{ $labels.instance }} has evicted {{ $value }} keys in the last 5 minutes"
+        
+        - alert: RedisReplicationLag
+          expr: |
+            redis_connected_slaves < 2
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Redis replication issue"
+            description: "Redis master has only {{ $value }} connected replicas (expected 3)"
+  
+  # TLS configuration
+  tls:
+    enabled: false  # Enable if you have TLS certificates
+    authClients: true
+    existingSecret: "redis-tls-certs"
+    certFilename: "tls.crt"
+    certKeyFilename: "tls.key"
+    certCAFilename: "ca.crt"
+  
+  # Sysctl for performance tuning
+  sysctl:
+    enabled: true
+    mountHostSys: true

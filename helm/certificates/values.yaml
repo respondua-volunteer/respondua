@@ -1,0 +1,16 @@
+# Domain configuration
+domain: dmytroserbeniuk.com
+
+# Namespace where certificates will be stored
+namespace: gateway
+
+# ClusterIssuer to use
+clusterIssuer: letsencrypt-prod
+
+# Certificates to create
+certificates:
+  - name: wildcard-dmytroserbeniuk-com
+    secretName: wildcard-dmytroserbeniuk-com-tls
+    dnsNames:
+      - "*.dmytroserbeniuk.com"
+      - "dmytroserbeniuk.com"

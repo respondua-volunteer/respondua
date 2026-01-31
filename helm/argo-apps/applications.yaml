@@ -1,0 +1,278 @@
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: istio-base
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: infrastructure
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/istio-base
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: istio-system
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - CreateNamespace=true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: istiod
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: infrastructure
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/istiod
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: istio-system
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - CreateNamespace=true
+#   ignoreDifferences:
+#   - group: admissionregistration.k8s.io
+#     kind: ValidatingWebhookConfiguration
+#     jqPathExpressions:
+#     - .webhooks[].failurePolicy
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: istio-gateway
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: infrastructure
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/istio-gateway
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: gateway
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - CreateNamespace=true
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argo-cd
+  labels:
+    app.kubernetes.io/component: infrastructure
+    app.kubernetes.io/part-of: mcp-incident-analyst
+spec:
+  project: infrastructure
+  source:
+    repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+    targetRevision: HEAD
+    path: helm/metallb
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: metallb-system
+  syncPolicy:
+    # automated:
+    #   prune: true
+    #   selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: cert-manager
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: infrastructure
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/cert-manager
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: cert-manager
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+#     syncOptions:
+#     - CreateNamespace=true
+#   ignoreDifferences:
+#   - group: admissionregistration.k8s.io
+#     kind: MutatingWebhookConfiguration
+#     jqPathExpressions:
+#     - .webhooks[].clientConfig.caBundle
+#   - group: admissionregistration.k8s.io
+#     kind: ValidatingWebhookConfiguration
+#     jqPathExpressions:
+#     - .webhooks[].clientConfig.caBundle
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: cluster-issuer
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: infrastructure
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/cluster-issuer
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: cert-manager
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: certificates
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: infrastructure
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/certificates
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: gateway
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: istio-config
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: infrastructure
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/istio-config
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: gateway
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: grafana
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: observability
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/grafana
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: observability
+#   syncPolicy:
+#     syncOptions:
+#     - CreateNamespace=true
+# ---
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: postgresql
+#   namespace: argo-cd
+#   labels:
+#     app.kubernetes.io/component: database
+#     app.kubernetes.io/part-of: mcp-incident-analyst
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/postgresql
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: postgresql
+#   syncPolicy:
+#     automated:
+#       prune: true
+#       selfHeal: true
+# ---
+
+# apiVersion: argoproj.io/v1alpha1
+# kind: Application
+# metadata:
+#   name: redis
+#   namespace: argo-cd
+# spec:
+#   project: infrastructure
+#   source:
+#     repoURL: https://github.com/dimaserbenyuk/mcp-incident-analyst.git
+#     targetRevision: HEAD
+#     path: helm/redis
+#     helm:
+#       valueFiles:
+#         - values-dev.yaml
+  
+#   destination:
+#     server: https://kubernetes.default.svc
+#     namespace: redis
+  
+#   syncPolicy:
+#     # automated:
+#     #   prune: true
+#     #   selfHeal: true
+#     #   allowEmpty: false
+#     syncOptions:
+#       - CreateNamespace=true
+#     retry:
+#       limit: 5
+#       backoff:
+#         duration: 5s
+#         factor: 2
+#         maxDuration: 3m
+
+# ---

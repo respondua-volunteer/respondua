@@ -1,0 +1,23 @@
+apiVersion: v2
+name: cert-manager
+description: Umbrella chart for cert-manager - X.509 certificate management for Kubernetes
+type: application
+version: 1.0.0
+appVersion: "1.19.1"
+keywords:
+  - cert-manager
+  - certificates
+  - tls
+  - letsencrypt
+home: https://cert-manager.io/
+sources:
+  - https://github.com/cert-manager/cert-manager
+  - https://github.com/dimaserbenyuk/mcp-incident-analyst
+maintainers:
+  - name: dimaserbenyuk
+
+dependencies:
+  - name: cert-manager
+    version: v1.19.1
+    repository: https://charts.jetstack.io
+    condition: cert-manager.enabled

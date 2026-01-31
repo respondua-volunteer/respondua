@@ -1,0 +1,16 @@
+apiVersion: v2
+name: cluster-issuer
+description: ClusterIssuer for Let's Encrypt with Cloudflare DNS validation
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+keywords:
+  - cert-manager
+  - letsencrypt
+  - cloudflare
+  - clusterissuer
+home: https://cert-manager.io/
+sources:
+  - https://github.com/dimaserbenyuk/mcp-incident-analyst
+maintainers:
+  - name: dimaserbenyuk

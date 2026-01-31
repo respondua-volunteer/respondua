@@ -1,0 +1,195 @@
+# Gateway configuration
+gateway:
+  name: default-gateway
+  namespace: gateway
+  selector:
+    istio: gateway
+  
+  # Certificate secret name
+  credentialName: wildcard-dmytroserbeniuk-com-tls
+  
+  # Hosts
+  hosts:
+    - "*.dmytroserbeniuk.com"
+    - "dmytroserbeniuk.com"
+    - "ollama.dmytroserbeniuk.com"
+
+# Virtual Services
+virtualServices:
+  - name: argocd
+    namespace: argo-cd
+    gateway: gateway/default-gateway
+    hosts:
+      - "argocd.dmytroserbeniuk.com"
+    http:
+      - match:
+          - uri:
+              prefix: /
+        route:
+          - destination:
+              host: argo-cd-argocd-server
+              port:
+                number: 80
+  
+  - name: grafana
+    namespace: observability
+    gateway: gateway/default-gateway
+    hosts:
+      - "grafana.dmytroserbeniuk.com"
+    http:
+      - match:
+          - uri:
+              prefix: /
+        route:
+          - destination:
+              host: grafana
+              port:
+                number: 80
+  
+  - name: ollama
+    namespace: mcp-incident-analyst
+    gateway: gateway/default-gateway
+    hosts:
+      - "ollama.dmytroserbeniuk.com"
+    http:
+      - match:
+          - uri:
+              prefix: /
+        timeout: 600s
+        route:
+          - destination:
+              host: ollama
+              port:
+                number: 11434
+
+
+# Security settings
+security:
+  peerAuthentication:
+    enabled: true
+    # PERMISSIVE - allows both mTLS and plaintext (safe, no breaking changes)
+    # STRICT - requires mTLS for all traffic (use after testing)
+    mode: PERMISSIVE
+  
+  # JWT Authentication
+  requestAuthentication:
+    enabled: false
+    policies:
+      - name: jwt-auth-ollama
+        namespace: mcp-incident-analyst
+        selector:
+          matchLabels:
+            app.kubernetes.io/name: ollama
+        jwtRules:
+          - issuer: "mcp-incident-analyst-auth"
+            # URL к JWKS эндпоинту вашего authenticate сервиса
+            jwksUri: "http://authenticate.authenticate.svc.cluster.local:8000/.well-known/jwks.json"
+            # Извлекаем токен из Authorization: Bearer <token>
+            fromHeaders:
+              - name: "Authorization"
+                prefix: "Bearer "
+            forwardOriginalToken: true
+  
+  # Authorization Policies
+  authorization:
+    enabled: false
+    policies:
+      # Ollama - только для аутентифицированных пользователей
+      - name: ollama-require-jwt
+        namespace: mcp-incident-analyst
+        selector:
+          matchLabels:
+            app.kubernetes.io/name: ollama
+        action: ALLOW
+        rules:
+          # Разрешаем доступ с валидным JWT
+          - from:
+              - source:
+                  requestPrincipals: ["*"]
+          
+          # Также разрешаем доступ из других сервисов внутри кластера
+          - from:
+              - source:
+                  namespaces: ["mcp-incident-analyst"]
+
+# Traffic Management
+trafficManagement:
+  destinationRules:
+    enabled: true
+    rules:
+      # ArgoCD with circuit breaker and connection pooling
+      - name: argocd-server
+        namespace: argo-cd
+        host: argo-cd-argocd-server
+        trafficPolicy:
+          # Load Balancing Algorithm
+          loadBalancer:
+            simple: LEAST_REQUEST  # Options: ROUND_ROBIN, LEAST_REQUEST, RANDOM, PASSTHROUGH
+          
+          # Connection Pool - limits для соединений
+          # Для dev/demo кластера с 1-2 репликами
+          # Для production увеличьте: maxConnections=500, http2MaxRequests=500
+          connectionPool:
+            tcp:
+              maxConnections: 200          # Макс TCP соединений (100 на реплику × 2)
+              connectTimeout: 30s          # Таймаут подключения
+            http:
+              http1MaxPendingRequests: 100 # Макс pending HTTP/1.1 запросов
+              http2MaxRequests: 200        # Макс concurrent HTTP/2 запросов
+              maxRequestsPerConnection: 3  # Макс запросов на соединение (reuse)
+              idleTimeout: 120s            # Таймаут для idle соединений
+          
+          # Circuit Breaker - автоматическое отключение проблемных инстансов
+          outlierDetection:
+            consecutive5xxErrors: 5        # Сколько 5xx ошибок подряд для ejection
+            consecutiveGatewayErrors: 5    # Сколько gateway ошибок для ejection
+            interval: 30s                  # Интервал анализа
+            baseEjectionTime: 30s          # На сколько выкинуть из pool
+            maxEjectionPercent: 50         # Макс % инстансов для ejection
+            minHealthPercent: 30           # Мин % здоровых инстансов
+      
+      # Grafana с настройками для dashboard queries
+      - name: grafana
+        namespace: observability
+        host: grafana
+        trafficPolicy:
+          loadBalancer:
+            simple: ROUND_ROBIN
+          connectionPool:
+            tcp:
+              maxConnections: 100           # Увеличено для dashboard queries
+              connectTimeout: 10s
+            http:
+              http1MaxPendingRequests: 50
+              http2MaxRequests: 100         # Увеличено для параллельных панелей
+              idleTimeout: 300s             # 5 минут для долгих сессий
+          outlierDetection:
+            consecutive5xxErrors: 5         # Более толерантно к ошибкам
+            consecutiveGatewayErrors: 5
+            interval: 30s                   # Проверка раз в 30 секунд
+            baseEjectionTime: 30s
+            maxEjectionPercent: 50
+      
+      # Ollama с настройками для LLM inference
+      - name: ollama
+        namespace: mcp-incident-analyst
+        host: ollama.mcp-incident-analyst.svc.cluster.local
+        trafficPolicy:
+          loadBalancer:
+            simple: ROUND_ROBIN
+          connectionPool:
+            tcp:
+              maxConnections: 50            # Ограничено для LLM workload
+              connectTimeout: 30s
+            http:
+              http1MaxPendingRequests: 20
+              http2MaxRequests: 50
+              idleTimeout: 600s             # 10 минут для долгих inference
+              maxRequestsPerConnection: 1   # Один запрос на соединение
+          outlierDetection:
+            consecutive5xxErrors: 10        # Более толерантно - LLM может быть медленным
+            consecutiveGatewayErrors: 10
+            interval: 60s
+            baseEjectionTime: 60s
+            maxEjectionPercent: 50
+            minHealthPercent: 0             # Позволяем работать даже с одной репликой

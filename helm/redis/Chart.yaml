@@ -1,0 +1,12 @@
+apiVersion: v2
+name: redis
+description: Redis umbrella chart for MCP Incident Analyst
+type: application
+version: 1.0.0
+appVersion: "8.4.0"
+
+dependencies:
+  - name: redis
+    version: "24.0.0"
+    repository: "https://charts.bitnami.com/bitnami"
+    condition: redis.enabled

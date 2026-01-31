@@ -1,0 +1,54 @@
+# Umbrella chart values for cert-manager
+
+# Values are passed to the cert-manager subchart
+cert-manager:
+  enabled: true
+  
+  # Install CRDs as part of the chart
+  crds:
+    enabled: true
+  
+  # Global configuration
+  global:
+    leaderElection:
+      namespace: cert-manager
+  
+  # Resource limits
+  resources:
+    requests:
+      cpu: 10m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 128Mi
+  
+  # Webhook configuration
+  webhook:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+  
+  # CA injector configuration
+  cainjector:
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
+  
+  # Startup API check configuration
+  startupapicheck:
+    enabled: true
+    resources:
+      requests:
+        cpu: 10m
+        memory: 32Mi
+      limits:
+        cpu: 100m
+        memory: 128Mi
