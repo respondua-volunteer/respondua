@@ -24,6 +24,7 @@ k3s_server_config:
   disable:
     - "traefik"
     - "servicelb"
+    - "metrics-server"
 
 # System requirements
 required_kernel_modules:
