@@ -6,13 +6,12 @@ gateway:
     istio: gateway
   
   # Certificate secret name
-  credentialName: wildcard-dmytroserbeniuk-com-tls
+  credentialName: wildcard-respondua-org-tls
   
   # Hosts
   hosts:
-    - "*.dmytroserbeniuk.com"
-    - "dmytroserbeniuk.com"
-    - "ollama.dmytroserbeniuk.com"
+    - "*.respondua.org"
+    - "respondua.org"
 
 # Virtual Services
 virtualServices:
@@ -20,7 +19,7 @@ virtualServices:
     namespace: argo-cd
     gateway: gateway/default-gateway
     hosts:
-      - "argocd.dmytroserbeniuk.com"
+      - "argocd.respondua.org"
     http:
       - match:
           - uri:
@@ -31,36 +30,22 @@ virtualServices:
               port:
                 number: 80
   
-  - name: grafana
-    namespace: observability
-    gateway: gateway/default-gateway
-    hosts:
-      - "grafana.dmytroserbeniuk.com"
-    http:
-      - match:
-          - uri:
-              prefix: /
-        route:
-          - destination:
-              host: grafana
-              port:
-                number: 80
+  # - name: grafana
+  #   namespace: observability
+  #   gateway: gateway/default-gateway
+  #   hosts:
+  #     - "grafana.respondua.org"
+  #   http:
+  #     - match:
+  #         - uri:
+  #             prefix: /
+  #       route:
+  #         - destination:
+  #             host: grafana
+  #             port:
+  #               number: 80
   
-  - name: ollama
-    namespace: mcp-incident-analyst
-    gateway: gateway/default-gateway
-    hosts:
-      - "ollama.dmytroserbeniuk.com"
-    http:
-      - match:
-          - uri:
-              prefix: /
-        timeout: 600s
-        route:
-          - destination:
-              host: ollama
-              port:
-                number: 11434
+
 
 
 # Security settings
@@ -74,21 +59,21 @@ security:
   # JWT Authentication
   requestAuthentication:
     enabled: false
-    policies:
-      - name: jwt-auth-ollama
-        namespace: mcp-incident-analyst
-        selector:
-          matchLabels:
-            app.kubernetes.io/name: ollama
-        jwtRules:
-          - issuer: "mcp-incident-analyst-auth"
-            # URL к JWKS эндпоинту вашего authenticate сервиса
-            jwksUri: "http://authenticate.authenticate.svc.cluster.local:8000/.well-known/jwks.json"
-            # Извлекаем токен из Authorization: Bearer <token>
-            fromHeaders:
-              - name: "Authorization"
-                prefix: "Bearer "
-            forwardOriginalToken: true
+    # policies:
+    #   - name: jwt-auth-ollama
+    #     namespace: mcp-incident-analyst
+    #     selector:
+    #       matchLabels:
+    #         app.kubernetes.io/name: ollama
+    #     jwtRules:
+    #       - issuer: "mcp-incident-analyst-auth"
+    #         # URL к JWKS эндпоинту вашего authenticate сервиса
+    #         jwksUri: "http://authenticate.authenticate.svc.cluster.local:8000/.well-known/jwks.json"
+    #         # Извлекаем токен из Authorization: Bearer <token>
+    #         fromHeaders:
+    #           - name: "Authorization"
+    #             prefix: "Bearer "
+    #         forwardOriginalToken: true
   
   # Authorization Policies
   authorization:
@@ -170,26 +155,3 @@ trafficManagement:
             baseEjectionTime: 30s
             maxEjectionPercent: 50
       
-      # Ollama с настройками для LLM inference
-      - name: ollama
-        namespace: mcp-incident-analyst
-        host: ollama.mcp-incident-analyst.svc.cluster.local
-        trafficPolicy:
-          loadBalancer:
-            simple: ROUND_ROBIN
-          connectionPool:
-            tcp:
-              maxConnections: 50            # Ограничено для LLM workload
-              connectTimeout: 30s
-            http:
-              http1MaxPendingRequests: 20
-              http2MaxRequests: 50
-              idleTimeout: 600s             # 10 минут для долгих inference
-              maxRequestsPerConnection: 1   # Один запрос на соединение
-          outlierDetection:
-            consecutive5xxErrors: 10        # Более толерантно - LLM может быть медленным
-            consecutiveGatewayErrors: 10
-            interval: 60s
-            baseEjectionTime: 60s
-            maxEjectionPercent: 50
-            minHealthPercent: 0             # Позволяем работать даже с одной репликой
