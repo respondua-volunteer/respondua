@@ -46,3 +46,4 @@ STRIPE_WEBHOOK_SECRET = config("STRIPE_WEBHOOK_SECRET")
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_SSL_REDIRECT = True  # в проде ок, Stripe бьёт по https
+SECURE_REDIRECT_EXEMPT = [r'^health/$']  # Exclude health check from SSL redirect
