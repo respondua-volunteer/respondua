@@ -3,7 +3,6 @@
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
@@ -11,8 +10,8 @@ msgstr ""
 "POT-Creation-Date: 2025-08-17 14:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
-"Language: \n"
+"Language-Team: English\n"
+"Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,44 +23,36 @@ msgid "Блог"
 msgstr "Blog"
 
 #: blog/templates/blogusy.html:9
-#, fuzzy
-#| msgid "Блог"
 msgid "Наш Блог"
-msgstr "Blog"
+msgstr "Our Blog"
 
 #: blog/templates/blogusy.html:10
 msgid "Останні новини та статті"
 msgstr "Latest news and articles"
 
 #: blog/templates/search_results.html:15
-#, fuzzy
-#| msgid "Останні новини та статті"
 msgid "Останні новини та статті безпосередньо з нашого блогу"
-msgstr "Latest news and articles"
+msgstr "Latest news and articles directly from our blog"
 
 #: blog/templates/search_results.html:63
 msgid "Нічого не знайдено"
-msgstr ""
+msgstr "Nothing found"
 
 #: blog/templates/single_blogus.html:8
-#, fuzzy
-#| msgid "Вiдгук"
 msgid "Cтаття Вiдгукa"
-msgstr "Vidguk"
+msgstr "Vidguk Article"
 
 #: blog/templates/single_blogus.html:77
 msgid "Схожі статті"
-msgstr ""
+msgstr "Related Articles"
 
 #: blog/templates/single_blogus.html:102
 msgid "Пошук"
-msgstr ""
+msgstr "Search"
 
 #: blog/templates/single_blogus.html:109
-#, fuzzy
-#| msgid "Останні новини та статті"
 msgid "Останні Публікації"
-msgstr "Latest news and articles"
+msgstr "Recent Posts"
 
 #: templates/admin/base_site.html:29
 msgid "Skip to main content"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 18:53+0000\n"
+"POT-Creation-Date: 2026-03-03 08:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -67,11 +67,11 @@ msgid "Хто ми?"
 msgstr ""
 
 #: home/templates/footer.html:26 home/templates/index.html:650
-#: home/templates/top_bar.html:46
+#: home/templates/top_bar.html:50
 msgid "Блог"
 msgstr ""
 
-#: home/templates/footer.html:27 home/templates/top_bar.html:44
+#: home/templates/footer.html:27 home/templates/top_bar.html:48
 msgid "Команда"
 msgstr ""
 
@@ -80,7 +80,6 @@ msgid "Усі права захищені."
 msgstr ""
 
 #: home/templates/index.html:8 home/templates/team.html:8
-#: home/templates/top_bar.html:35
 msgid "Вiдгук"
 msgstr ""
 
@@ -450,6 +449,6 @@ msgstr ""
 msgid "Андрiй Шмериго"
 msgstr ""
 
-#: home/templates/top_bar.html:43
+#: home/templates/top_bar.html:47
 msgid "Про Нас"
 msgstr ""

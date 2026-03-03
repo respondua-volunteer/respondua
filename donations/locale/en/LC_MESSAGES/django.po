@@ -43,13 +43,15 @@ msgid "Дякуємо за ваш донат!"
 msgstr "Thank you for your donation!"
 
 #: donations/templates/donations/receipt.html:24
-#, fuzzy, python-format
-#| msgid "Ми отримали %(amount)s %(currency)s."
+#, python-format
 msgid ""
 "\n"
 "              Ми отримали %(amount)s %(currency)s.\n"
 "            "
-msgstr "We received %(amount)s %(currency)s."
+msgstr ""
+"\n"
+"              We received %(amount)s %(currency)s.\n"
+"            "
 
 #: donations/templates/donations/receipt.html:31
 msgid "Номер транзакції"
@@ -93,10 +95,8 @@ msgid "Лист-підтвердження буде надіслано на ва
 msgstr "A confirmation email will be sent to your email (if provided)."
 
 #: donations/views.py:56
-#, fuzzy
-#| msgid "Дякуємо! Ваш донат отримано."
 msgid "Дякуємо! Оплату отримано"
-msgstr "Thank you! Your donation has been received."
+msgstr "Thank you! Payment received."
 
 #: donations/views.py:58
 #, python-format

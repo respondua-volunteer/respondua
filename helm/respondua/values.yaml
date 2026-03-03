@@ -96,7 +96,11 @@ migrations:
 
 # Collectstatic job configuration (manual trigger only)
 collectstatic:
-  enabled: false  # Set to true when you want to collect static files to S3
+  enabled: true  # Set to true when you want to collect static files to S3
+
+# Compilemessages job configuration (manual trigger only)
+compilemessages:
+  enabled: true  # Set to true when you want to compile translation .po -> .mo
 
 # -- Expose the service via gateway-api HTTPRoute
 # Requires Gateway API resources and suitable controller installed within the cluster
