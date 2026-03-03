@@ -2,7 +2,7 @@ apiVersion: networking.istio.io/v1beta1
 kind: ServiceEntry
 metadata:
   name: s3-eu-central-1
-  namespace: respondua
+  namespace: {{ .Values.gateway.namespace }}
 spec:
   hosts:
     - respondua.s3.eu-central-1.amazonaws.com
