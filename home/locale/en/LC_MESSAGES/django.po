@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: respondua.org\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-18 19:06+0000\n"
+"POT-Creation-Date: 2026-03-03 08:44+0000\n"
 "PO-Revision-Date: 2025-08-18 21:00+0000\n"
 "Last-Translator: Dmytro Serbeniuk\n"
 "Language-Team: English\n"
@@ -13,10 +13,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: home/templates/cookie_modal.html:8
-#, fuzzy
-#| msgid "Політику конфіденційності"
 msgid "Ми цінуємо вашу конфіденційність"
-msgstr "privacy policy"
+msgstr "We value your privacy"
 
 #: home/templates/cookie_modal.html:11
 msgid ""
@@ -64,11 +62,11 @@ msgid "Хто ми?"
 msgstr "Who we are?"
 
 #: home/templates/footer.html:26 home/templates/index.html:650
-#: home/templates/top_bar.html:46
+#: home/templates/top_bar.html:50
 msgid "Блог"
 msgstr "Blog"
 
-#: home/templates/footer.html:27 home/templates/top_bar.html:44
+#: home/templates/footer.html:27 home/templates/top_bar.html:48
 msgid "Команда"
 msgstr "Team"
 
@@ -77,7 +75,6 @@ msgid "Усі права захищені."
 msgstr "All Rights Reserved"
 
 #: home/templates/index.html:8 home/templates/team.html:8
-#: home/templates/top_bar.html:35
 msgid "Вiдгук"
 msgstr "Vidguk"
 
@@ -131,15 +128,16 @@ msgid ""
 "Важливо пам'ятати, що ми можемо змінити світ, починаючи з невеликих дій, і "
 "це може мати величезний вплив на життя мільйонів людей."
 msgstr ""
-"It is important to remember that we can change the world starting with small actions, "
-"and this can have a huge impact on the lives of millions of people."
+"It is important to remember that we can change the world starting with small "
+"actions, and this can have a huge impact on the lives of millions of people."
 
 #: home/templates/index.html:85
 msgid ""
 "Нехай цей лозунг надихне нас усіх дарувати надію та робити світ кращим для "
 "інших."
 msgstr ""
-"Let this slogan inspire us all to bring hope and make the world a better place for others."
+"Let this slogan inspire us all to bring hope and make the world a better "
+"place for others."
 
 #: home/templates/index.html:125
 msgid "Трохи про нас"
@@ -218,7 +216,6 @@ msgstr ""
 msgid "Наші проєкти"
 msgstr "Our Projects"
 
-
 #: home/templates/index.html:168
 msgid "З вами зможемо врятувати більше життів"
 msgstr "Together we can save more lives"
@@ -226,7 +223,6 @@ msgstr "Together we can save more lives"
 #: home/templates/index.html:179
 msgid "Гуманітарна допомога в Одесі"
 msgstr "Humanitarian Aid in Odesa"
-
 
 #: home/templates/index.html:181
 msgid ""
@@ -242,7 +238,6 @@ msgstr ""
 msgid "Гуманітарна допомога в Миколаївській, Херсонській та Одеській областях"
 msgstr "Humanitarian Aid in Mykolaiv, Kherson, and Odesa Regions"
 
-
 #: home/templates/index.html:196
 msgid ""
 "Кожні 6 тижнів ми виїжджаємо з гуманітарною допомогою в Херсонську, "
@@ -252,7 +247,6 @@ msgstr ""
 "Every six weeks, we deliver humanitarian aid to Kherson, Mykolaiv, and Odesa "
 "regions. Between 100 and 200 families receive assistance — often people from "
 "remote villages who have been left without support."
-
 
 #: home/templates/index.html:210
 msgid "Відбудова"
@@ -282,10 +276,10 @@ msgid ""
 "вересні — шкільну канцелярію. Таку підтримку отримують близько 200 дітей."
 msgstr ""
 "Our children's programs combine creativity, play, and support. We work with "
-"children who have experienced trauma, helping them feel like children again — "
-"through play, connection, and safety. We run programs in Kherson, Mykolaiv, "
-"and Odesa regions. Each child receives a gift, and in September — school "
-"supplies. This support reaches about 200 children."
+"children who have experienced trauma, helping them feel like children again "
+"— through play, connection, and safety. We run programs in Kherson, "
+"Mykolaiv, and Odesa regions. Each child receives a gift, and in September — "
+"school supplies. This support reaches about 200 children."
 
 #: home/templates/index.html:240
 msgid "Допомога ветеранам"
@@ -311,8 +305,9 @@ msgid ""
 "дім. Вони приходять відпочити, побути почутими й знайти в собі нову силу та "
 "спокій через творчість."
 msgstr ""
-"Every Tuesday, we open our doors to women who were forced to leave their homes. "
-"They come to rest, be heard, and find new strength and peace through creativity."
+"Every Tuesday, we open our doors to women who were forced to leave their "
+"homes. They come to rest, be heard, and find new strength and peace through "
+"creativity."
 
 #: home/templates/index.html:270
 msgid "Зимний сезон"
@@ -379,7 +374,8 @@ msgid ""
 "Вони також дозволяють нам запускати нові проекти та підвищувати свідомість "
 "про важливі питання."
 msgstr ""
-"They also allow us to launch new projects and raise awareness about important issues."
+"They also allow us to launch new projects and raise awareness about "
+"important issues."
 
 #: home/templates/index.html:377
 msgid "Приєднавшись до нас, ми зробимо набагато більше"
@@ -501,7 +497,6 @@ msgstr "Viktoria Mincheva"
 msgid "Андрiй Шмериго"
 msgstr "Andrew Shmeriga"
 
-#: home/templates/top_bar.html:43
+#: home/templates/top_bar.html:47
 msgid "Про Нас"
 msgstr "About Us"
-

@@ -1,0 +1,50 @@
+{{- if .Values.compilemessages.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "respondua.fullname" . }}-compilemessages-{{ now | date "20060102150405" }}
+  labels:
+    {{- include "respondua.labels" . | nindent 4 }}
+    app.kubernetes.io/component: compilemessages
+spec:
+  backoffLimit: 3
+  template:
+    metadata:
+      labels:
+        {{- include "respondua.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: compilemessages
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      restartPolicy: Never
+      containers:
+      - name: compilemessages
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        command:
+          - /bin/sh
+          - -c
+          - |
+            set -e
+            echo "Compiling translation messages..."
+            python manage.py compilemessages \
+              -i "venv/*" -i "static/*" -i "*/site-packages/*"
+            echo "Compilemessages completed successfully!"
+        {{- if .Values.env }}
+        env:
+          {{- toYaml .Values.env | nindent 10 }}
+        {{- end }}
+        {{- if .Values.envFrom }}
+        envFrom:
+          {{- toYaml .Values.envFrom | nindent 10 }}
+        {{- end }}
+        resources:
+          requests:
+            cpu: 100m
+            memory: 128Mi
+          limits:
+            cpu: 200m
+            memory: 256Mi
+{{- end }}
