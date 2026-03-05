@@ -1630,9 +1630,36 @@ a:focus {
     overflow: hidden;
 }
 
-.single .single-content img {
+.single .single-content > img.post-hero-image {
     margin-bottom: 20px;
     width: 100%;
+    height: auto;
+    display: block;
+}
+
+.single .single-body img {
+    margin-bottom: 20px;
+    max-width: 100%;
+    width: auto !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    display: block;
+}
+
+.single .single-body figure.image {
+    margin: 0 0 20px;
+    max-width: 100%;
+}
+
+.single .single-body figure.image img {
+    width: 100% !important;
+    max-width: 100%;
+    height: auto !important;
+    aspect-ratio: auto !important;
+}
+
+.single .single-body figure.image.image_resized {
+    max-width: 100%;
 }
 
 .single .single-tags {
@@ -2190,4 +2217,26 @@ a:focus {
         margin: 5px 0;
         text-align: center;
     }
+}
+
+/* CKEditor images inside post content (.single-content) */
+.single .single-content figure.image,
+.single .single-content figure.image.image_resized {
+    max-width: 100% !important;
+    margin: 0 0 20px !important;
+}
+
+.single .single-content figure.image img {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    aspect-ratio: auto !important;
+    display: block;
+}
+
+/* if CKEditor adds inline width to figure.image_resized, keep it responsive */
+.single .single-content figure.image.image_resized {
+    width: auto !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
 }

@@ -1,5 +1,7 @@
 import logging
+from django.http import Http404
 from django.shortcuts import render
+from django.utils.translation import get_language
 from django.views import generic
 from .models import Post
 
@@ -19,6 +21,30 @@ class PostList(generic.ListView):
 class PostDetail(generic.DetailView):
     model = Post
     template_name = 'single_blogus.html'
+
+    def get_object(self, queryset=None):
+        queryset = queryset or self.get_queryset()
+        language = (get_language() or "uk").split("-")[0]
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        slug_field = f"{self.slug_field}_{language}"
+
+        localized_queryset = queryset.filter(status=1)
+        if hasattr(Post, slug_field):
+            localized_queryset = localized_queryset.filter(**{slug_field: slug})
+        else:
+            localized_queryset = localized_queryset.filter(**{self.slug_field: slug})
+
+        obj = localized_queryset.order_by("-updated_on", "-pk").first()
+        if obj is None:
+            raise Http404("No Post matches the given query.")
+
+        if localized_queryset.count() > 1:
+            logger.warning(
+                "Multiple posts matched localized slug",
+                extra={"slug": slug, "language": language, "matches": localized_queryset.count()},
+            )
+
+        return obj
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

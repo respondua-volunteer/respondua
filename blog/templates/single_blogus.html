@@ -50,11 +50,11 @@
                 <div class="row">
                     <div class="col-lg-8">
                         <div class="single-content">
-                            <img src="{{post.image.url}}" />
+                            <img class="post-hero-image" src="{{ post.image.url }}" alt="{{ object.title }}" />
                             <h2>{{ object.title }}</h2>
-                            <p>
+                            <div class="single-body">
                                 {{ object.content | safe }}
-                            </p>
+                            </div>
                         </div>
                         <div class="single-tags">
                             {% for tag in object.tags.all %}
@@ -127,13 +127,6 @@
                                 </div>
                             </div>
 
-                            <div class="sidebar-widget">
-                                <div class="image-widget">
-                                    {% for relatedpost_sideimage in post.tags.similar_objects|slice:"1" %}
-                                        <a href="{% url 'post_detail' relatedpost_sideimage.slug  %}"><img src="{{ relatedpost_sideimage.image.url }}" alt="Image"></a>
-                                    {% endfor %}
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
