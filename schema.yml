@@ -2,6 +2,594 @@ openapi: 3.0.3
 info:
   title: Respond API
   version: 1.0.0
-  description: API documentation for Respond project
-paths: {}
-components: {}
+  description: |
+    API documentation for Respond project - a charitable foundation management system.
+    
+    Respond is a Ukrainian volunteer charitable foundation that helps people in need.
+    This API provides endpoints for managing donations, blog posts, events, and other foundation activities.
+    
+    ## Features
+    - Donation management with Stripe integration
+    - Blog system with multi-language support
+    - Event management
+    - User profiles and team management
+    - Multi-language support (Ukrainian/English)
+    
+    ## Authentication
+    Most endpoints require authentication through Django's session-based authentication.
+    
+  contact:
+    email: charityfound@respondua.org
+    url: https://respondua.org
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+servers:
+  - url: https://respondua.org
+    description: Production server
+  - url: http://localhost:8000
+    description: Development server
+
+paths:
+  # Donation endpoints
+  /create-checkout-session/:
+    post:
+      tags:
+        - Donations
+      summary: Create Stripe checkout session
+      description: Creates a new Stripe checkout session for donation processing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - amount
+                - currency
+              properties:
+                amount:
+                  type: number
+                  format: decimal
+                  minimum: 5
+                  maximum: 10000
+                  description: Donation amount
+                  example: 100.00
+                currency:
+                  type: string
+                  enum: [pln, usd, eur]
+                  default: pln
+                  description: Currency code
+                  example: pln
+                name:
+                  type: string
+                  maxLength: 200
+                  description: Donor name (optional)
+                  example: "John Doe"
+                email:
+                  type: string
+                  format: email
+                  description: Donor email (optional)
+                  example: "john@example.com"
+      responses:
+        '200':
+          description: Checkout session created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    description: Stripe session ID
+                    example: "cs_live_1234567890"
+        '400':
+          description: Bad request - invalid parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Method not allowed - only POST allowed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /success/:
+    get:
+      tags:
+        - Donations
+      summary: Donation success page
+      description: Success page displayed after successful donation
+      parameters:
+        - name: session_id
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Stripe session ID
+      responses:
+        '200':
+          description: Success page rendered
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /cancel/:
+    get:
+      tags:
+        - Donations
+      summary: Donation cancellation page
+      description: Page displayed when donation is cancelled
+      responses:
+        '200':
+          description: Cancellation page rendered
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /stripe/webhook/:
+    post:
+      tags:
+        - Donations
+      summary: Stripe webhook endpoint
+      description: Handles Stripe webhook events for payment processing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Stripe webhook payload
+      responses:
+        '200':
+          description: Webhook processed successfully
+        '400':
+          description: Invalid webhook payload
+
+  /donations/export/:
+    get:
+      tags:
+        - Donations
+      summary: Export donations to CSV
+      description: Export all donations data to CSV format (admin only)
+      security:
+        - sessionAuth: []
+      responses:
+        '200':
+          description: CSV file with donations data
+          content:
+            text/csv:
+              schema:
+                type: string
+        '403':
+          description: Forbidden - admin access required
+
+  # Blog endpoints
+  /blog/:
+    get:
+      tags:
+        - Blog
+      summary: List blog posts
+      description: Get a paginated list of published blog posts
+      parameters:
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+          description: Page number for pagination
+        - name: tag
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Filter posts by tag
+      responses:
+        '200':
+          description: List of blog posts
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BlogPost'
+                  count:
+                    type: integer
+                  next:
+                    type: string
+                    nullable: true
+                  previous:
+                    type: string
+                    nullable: true
+
+  /blog/{slug}/:
+    get:
+      tags:
+        - Blog
+      summary: Get blog post by slug
+      description: Retrieve a specific blog post by its slug
+      parameters:
+        - name: slug
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Blog post slug
+          example: "helping-ukraine-2024"
+      responses:
+        '200':
+          description: Blog post details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BlogPost'
+        '404':
+          description: Blog post not found
+
+  /search/:
+    get:
+      tags:
+        - Blog
+      summary: Search blog posts
+      description: Search for blog posts by title or content
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Search query
+          example: "ukraine help"
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlogPost'
+
+  /recent_posts/:
+    get:
+      tags:
+        - Blog
+      summary: Get recent blog posts
+      description: Get the most recent published blog posts
+      parameters:
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 5
+          description: Number of posts to return
+      responses:
+        '200':
+          description: List of recent blog posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/BlogPost'
+
+  # Home/General endpoints
+  /:
+    get:
+      tags:
+        - Home
+      summary: Homepage
+      description: Main homepage with events and general information
+      responses:
+        '200':
+          description: Homepage rendered
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /team/:
+    get:
+      tags:
+        - Home
+      summary: Team page
+      description: Information about the foundation team
+      responses:
+        '200':
+          description: Team page rendered
+          content:
+            text/html:
+              schema:
+                type: string
+
+  /privacy-policy/:
+    get:
+      tags:
+        - Home
+      summary: Privacy policy
+      description: Privacy policy page
+      responses:
+        '200':
+          description: Privacy policy rendered
+          content:
+            text/html:
+              schema:
+                type: string
+
+  # Language switching
+  /i18n/setlang/:
+    post:
+      tags:
+        - Internationalization
+      summary: Set language preference
+      description: Switch between supported languages (Ukrainian/English)
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - language
+              properties:
+                language:
+                  type: string
+                  enum: [uk, en]
+                  description: Language code
+                  example: "en"
+                next:
+                  type: string
+                  description: Redirect URL after language change
+                  example: "/"
+      responses:
+        '302':
+          description: Redirect to specified page with new language
+
+components:
+  schemas:
+    Donation:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Unique donation ID
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the donation was created
+        name:
+          type: string
+          maxLength: 200
+          description: Donor name
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: Donor email
+          example: "john@example.com"
+        amount:
+          type: number
+          format: decimal
+          description: Donation amount
+          example: 100.00
+        currency:
+          type: string
+          maxLength: 10
+          default: "pln"
+          description: Currency code
+          example: "pln"
+        payment_intent:
+          type: string
+          maxLength: 255
+          description: Stripe payment intent ID
+          example: "pi_1234567890"
+        method:
+          type: string
+          maxLength: 50
+          description: Payment method
+          example: "card"
+        country:
+          type: string
+          maxLength: 2
+          description: Country code
+          example: "PL"
+        card_brand:
+          type: string
+          maxLength: 20
+          description: Card brand
+          example: "visa"
+        funding:
+          type: string
+          maxLength: 20
+          description: Funding type
+          example: "credit"
+        status:
+          type: string
+          enum: [pending, succeeded, failed, refunded]
+          description: Donation status
+          example: "succeeded"
+        raw:
+          type: object
+          description: Raw Stripe data
+      required:
+        - amount
+        - payment_intent
+
+    BlogPost:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Unique post ID
+        title:
+          type: string
+          maxLength: 200
+          description: Post title
+          example: "Helping Children in Ukraine"
+        slug:
+          type: string
+          maxLength: 200
+          description: URL-friendly version of title
+          example: "helping-children-ukraine"
+        author:
+          $ref: '#/components/schemas/Profile'
+        content:
+          type: string
+          description: Post content in HTML
+        teaser_text:
+          type: string
+          maxLength: 200
+          description: Short description for previews
+          example: "Our latest initiative to help Ukrainian children..."
+        image:
+          type: string
+          format: uri
+          description: Featured image URL
+          example: "/media/images/post-image.jpg"
+        tags:
+          type: array
+          items:
+            type: string
+          description: Post tags
+          example: ["ukraine", "children", "help"]
+        status:
+          type: integer
+          enum: [0, 1]
+          description: Publication status (0=Draft, 1=Published)
+          example: 1
+        created_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the post was created
+        updated_on:
+          type: string
+          format: date-time
+          readOnly: true
+          description: When the post was last updated
+      required:
+        - title
+        - slug
+        - author
+        - content
+
+    Profile:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Unique profile ID
+        user:
+          type: integer
+          description: Associated user ID
+        name:
+          type: string
+          maxLength: 200
+          description: Profile name
+          example: "John Smith"
+        bio:
+          type: string
+          description: Biography
+          example: "Volunteer coordinator with 5 years of experience..."
+        image:
+          type: string
+          format: uri
+          description: Profile image URL
+          example: "/media/images/profile-john.jpg"
+      required:
+        - name
+        - bio
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+          description: Unique event ID
+        title:
+          type: string
+          maxLength: 200
+          description: Event title
+          example: "Charity Fundraiser for Ukraine"
+        description:
+          type: string
+          description: Event description
+        place:
+          type: string
+          maxLength: 200
+          description: Event location
+          example: "Warsaw Community Center"
+        date:
+          type: string
+          format: date
+          nullable: true
+          description: Event date
+          example: "2024-03-15"
+        time:
+          type: string
+          format: time
+          nullable: true
+          description: Event time
+          example: "18:00"
+        image:
+          type: string
+          format: uri
+          description: Event image URL
+          example: "/media/images/event-image.jpg"
+      required:
+        - title
+        - description
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: "Invalid amount"
+        detail:
+          type: string
+          description: Detailed error information
+          example: "The amount must be between 5 and 10000"
+      required:
+        - error
+
+  securitySchemes:
+    sessionAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+      description: Django session authentication
+
+tags:
+  - name: Donations
+    description: |
+      Donation management endpoints for processing charitable contributions.
+      Integrates with Stripe for secure payment processing.
+  - name: Blog
+    description: |
+      Blog system for sharing updates, stories, and news about foundation activities.
+      Supports multi-language content and tagging.
+  - name: Home
+    description: |
+      General website pages including homepage, team information, and static content.
+  - name: Internationalization
+    description: |
+      Language switching and internationalization features.
+      Supports Ukrainian and English languages.
