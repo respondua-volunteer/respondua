@@ -13,7 +13,7 @@ clusterIssuer:
 # AWS Route 53 configuration
 route53:
   region: us-east-1  # Change to your AWS region
-  hostedZoneID: ""  # Your Route 53 Hosted Zone ID
+  hostedZoneID: "Z0507021278O70FWOUDE3"  # Bypasses ListHostedZonesByName API call (blocked by Istio)
   accessKeyIDSecretRef:
     name: route53-credentials
     key: access-key-id
